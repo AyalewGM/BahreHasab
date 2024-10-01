@@ -3,7 +3,12 @@ window.onload = function() {
     const currentGregorianYear = new Date().getFullYear();
     const currentEthiopianYear = currentGregorianYear - 8;
     document.getElementById('ethiopianYear').value = currentEthiopianYear;
+    
+    // Trigger calculation on page load
     calculateCalendar();
+
+    // Add event listener for the year change
+    document.getElementById('ethiopianYear').addEventListener('change', calculateCalendar);
 };
 
 function calculateCalendar() {
@@ -102,8 +107,8 @@ function addDaysToEthiopianDate(startMonth, startDay, daysToAdd) {
 
 // Display fasting and holy days
 function displayFastingDates(fastingDates) {
-    const resultTable = document.getElementById('resultTable');
-    resultTable.innerHTML = '';  // Clear previous results
+    const fastingTable = document.getElementById('fastingTable');
+    fastingTable.innerHTML = '';  // Clear previous results
     fastingDates.forEach(day => {
         const row = document.createElement('tr');
         const nameCell = document.createElement('td');
@@ -112,6 +117,6 @@ function displayFastingDates(fastingDates) {
         dateCell.innerText = `${day.month} ${day.day}`;
         row.appendChild(nameCell);
         row.appendChild(dateCell);
-        resultTable.appendChild(row);
+        fastingTable.appendChild(row);
     });
 }

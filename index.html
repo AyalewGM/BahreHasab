@@ -10,14 +10,10 @@
 
     <style>
         body {
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Flag_of_Ethiopia.svg/1920px-Flag_of_Ethiopia.svg.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.9;
+            background-color: #f5f5f5;
         }
         .content-wrapper {
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -49,7 +45,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <label for="ethiopianYear" class="form-label">Enter Ethiopian Year:</label>
-                <input type="number" id="ethiopianYear" class="form-control mb-3" onchange="calculateCalendar()" />
+                <input type="number" id="ethiopianYear" class="form-control mb-3" />
             </div>
             <div class="col-md-6 d-flex align-items-end">
                 <button class="btn btn-primary" onclick="calculateCalendar()">Calculate</button>
