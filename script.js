@@ -43,23 +43,33 @@ function calculateCalendar() {
     document.getElementById('abektie').innerText = abektie;
     document.getElementById('metqi').innerText = metqi;
 
-    // Step 6: Calculate Beale Metqi
-    const bealeMetqi = metqi > 14 ? metqi : metqi + 30;
-    document.getElementById('bealeMetqi').innerText = bealeMetqi;
+    // Step 6: Calculate Beale Metqi and Nineveh
+    let bealeMetqiMonth, ninevehMonth;
+    let bealeMetqiDay;
 
-    // Step 7: Calculate Mebaja Hamer (Nineveh)
-    const tewsakOfDay = 8; // Assuming Beale Metqi falls on a Saturday, its Tewsak is 8.
-    const mebajaHamer = (bealeMetqi + tewsakOfDay) % 30;
-    const nineveh = `Meskerem ${mebajaHamer}`;  // Nineveh is always in Meskerem.
-    document.getElementById('mebajaHamer').innerText = nineveh;
+    if (metqi > 14) {
+        bealeMetqiMonth = "Meskerem";
+        bealeMetqiDay = metqi;
+        ninevehMonth = "Tirr";
+        // Calculate Nineveh date starting from Tirr 29
+        ninevehDay = 29;
+    } else {
+        bealeMetqiMonth = "Tikimt";
+        bealeMetqiDay = metqi + 30; // In Tikimt, add 30 to Metqi value
+        ninevehMonth = "Yekatit";
+        ninevehDay = 29; // Nineveh falls in Yekatit when Metqi is less than 14
+    }
 
-    // Step 8: Calculate fasting and holy days based on Nineveh
-    const fastingDates = calculateFastingDates(mebajaHamer);
+    document.getElementById('bealeMetqi').innerText = `${bealeMetqiMonth} ${bealeMetqiDay}`;
+    document.getElementById('mebajaHamer').innerText = `${ninevehMonth} ${ninevehDay}`;
+
+    // Step 7: Calculate fasting and holy days based on Nineveh
+    const fastingDates = calculateFastingDates(ninevehMonth, ninevehDay);
     displayFastingDates(fastingDates);
 }
 
 // Helper function to calculate dates of fasting and holy days based on Nineveh
-function calculateFastingDates(ninevehDay) {
+function calculateFastingDates(ninevehMonth, ninevehDay) {
     const fastingAndHolyDays = [
         { name: "Abiy Tsome", tewsak: 14 },
         { name: "Debre Zeit", tewsak: 41 },
@@ -75,7 +85,7 @@ function calculateFastingDates(ninevehDay) {
 
     const results = fastingAndHolyDays.map(day => {
         const totalDays = ninevehDay + day.tewsak;
-        const [month, dayOfMonth] = addDaysToEthiopianDate("Meskerem", ninevehDay, day.tewsak);
+        const [month, dayOfMonth] = addDaysToEthiopianDate(ninevehMonth, ninevehDay, day.tewsak);
         return { name: day.name, month, day: dayOfMonth };
     });
 
