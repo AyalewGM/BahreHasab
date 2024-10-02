@@ -1,3 +1,5 @@
+
+//Ayalew Mersha - October 1, 2024
 window.onload = function() {
     // Set default Ethiopian year to the current Ethiopian year (assuming current Gregorian year 2024 -> 2016 Ethiopian)
     const currentGregorianYear = new Date().getFullYear();
@@ -43,7 +45,7 @@ function calculateCalendar() {
     document.getElementById('abektie').innerText = abektie;
     document.getElementById('metqi').innerText = metqi;
 
-    // Step 6: Calculate Beale Metqi and Nineveh
+    // Step 6: Calculate Beale Metqi
     let bealeMetqiMonth, ninevehMonth;
     let bealeMetqiDay;
 
@@ -51,20 +53,20 @@ function calculateCalendar() {
         bealeMetqiMonth = "Meskerem";
         bealeMetqiDay = metqi;
         ninevehMonth = "Tirr";
-        // Calculate Nineveh date starting from Tirr 29
-        ninevehDay = 29;
     } else {
         bealeMetqiMonth = "Tikimt";
         bealeMetqiDay = metqi + 30; // In Tikimt, add 30 to Metqi value
         ninevehMonth = "Yekatit";
-        ninevehDay = 29; // Nineveh falls in Yekatit when Metqi is less than 14
     }
 
     document.getElementById('bealeMetqi').innerText = `${bealeMetqiMonth} ${bealeMetqiDay}`;
-    document.getElementById('mebajaHamer').innerText = `${ninevehMonth} ${ninevehDay}`;
 
-    // Step 7: Calculate fasting and holy days based on Nineveh
-    const fastingDates = calculateFastingDates(ninevehMonth, ninevehDay);
+    // Step 7: Calculate Mebaja Hamer (Nineveh)
+    const mebajaHamer = bealeMetqiDay; // Mebaja Hamer number is the same as Beale Metqi day
+    document.getElementById('mebajaHamer').innerText = `${ninevehMonth} ${mebajaHamer}`;
+
+    // Step 8: Calculate fasting and holy days based on Nineveh
+    const fastingDates = calculateFastingDates(ninevehMonth, mebajaHamer);
     displayFastingDates(fastingDates);
 }
 
