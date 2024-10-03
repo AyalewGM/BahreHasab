@@ -25,27 +25,23 @@ function calculateCalendar() {
     const wengelawi = evangelists[wengelawiIndex];
     document.getElementById('wengelawi').innerText = wengelawi;
 
-    // Step 3: Calculate Metene Rabiet and Tinte Qemer (Day of New Year)
-    const meteneRabiet = Math.floor(ameteAlem / 4);
-    const tinteQemer = (ameteAlem + meteneRabiet) % 7;
-    const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    document.getElementById('tinteQemer').innerText = daysOfWeek[tinteQemer];
+    // Step 3: Calculate the correct day of New Year (Tinte Qemer)
+    const tinteQemer = getEthiopianWeekday(ethiopianYear, "Meskerem", 1);
+    document.getElementById('tinteQemer').innerText = `Meskerem 1 (${tinteQemer})`;
 
-    // Step 4: Calculate Medeb and Wenber
+    // Step 4: Calculate Metene Rabiet, Medeb, Wenber, Abektie, and Metqi
+    const meteneRabiet = Math.floor(ameteAlem / 4);
     const medeb = ameteAlem % 19;
     const wenber = medeb === 0 ? 18 : medeb - 1;
-    document.getElementById('medeb').innerText = medeb;
-    document.getElementById('wenber').innerText = wenber;
-
-    // Step 5: Calculate Abektie and Metqi
     const abektie = (wenber * 11) % 30;
     const metqi = (wenber * 19) % 30;
+    document.getElementById('medeb').innerText = medeb;
+    document.getElementById('wenber').innerText = wenber;
     document.getElementById('abektie').innerText = abektie;
     document.getElementById('metqi').innerText = metqi;
 
-    // Step 6: Calculate Beale Metqi and the day of the week
-    let bealeMetqiMonth, ninevehMonth, bealeMetqiDay, bealeMetqiTotalDays;
-
+    // Step 5: Calculate Beale Metqi
+    let bealeMetqiMonth, ninevehMonth, bealeMetqiDay;
     if (metqi > 14) {
         bealeMetqiMonth = "Meskerem";
         bealeMetqiDay = metqi;
@@ -54,21 +50,21 @@ function calculateCalendar() {
         bealeMetqiMonth = "Tikimt";
         bealeMetqiDay = metqi;
         if (bealeMetqiDay > 30) {
-            bealeMetqiDay -= 30;  // Fix: adjust Beale Metqi to stay within month limits
+            bealeMetqiDay -= 30;
             bealeMetqiMonth = "Tikimt";
         }
         ninevehMonth = "Yekatit";
     }
-    
-    // Calculate the total number of days since Meskerem 1 (starting day of the Ethiopian year)
-    bealeMetqiTotalDays = calculateTotalDays(bealeMetqiMonth, bealeMetqiDay);
 
-    // Find the day of the week for Beale Metqi
-    const bealeMetqiDayOfWeekIndex = (bealeMetqiTotalDays + tinteQemer) % 7; // Adjusted for the New Year start day
-    const bealeMetqiDayOfWeek = daysOfWeek[bealeMetqiDayOfWeekIndex];
+    // Step 6: Get the Ethiopian day of the week for Beale Metqi
+    let bealeMetqiDayOfWeek = getEthiopianWeekday(ethiopianYear, bealeMetqiMonth, bealeMetqiDay);
+
+    // Shift Beale Metqi Day of the Week to the Previous Day
+    bealeMetqiDayOfWeek = shiftDayToPrevious(bealeMetqiDayOfWeek);
+
     document.getElementById('bealeMetqi').innerText = `${bealeMetqiMonth} ${bealeMetqiDay} (${bealeMetqiDayOfWeek})`;
 
-    // Step 7: Lookup the Tewsak for the day of the week
+    // Step 7: Lookup the Tewsak for the adjusted day of the week
     const tewsakTable = {
         "Sunday": 7,
         "Monday": 6,
@@ -80,13 +76,12 @@ function calculateCalendar() {
     };
     const tewsakOfDay = tewsakTable[bealeMetqiDayOfWeek];
 
-    // Step 8: Calculate Mebaja Hamer
+    // Step 8: Calculate Mebaja Hamer (Beale Metqi + Tewsak)
     let mebajaHamer = bealeMetqiDay + tewsakOfDay;
     if (mebajaHamer > 30) {
-        mebajaHamer -= 30;
-        ninevehMonth = "Yekatit"; // Move Nineveh to the next month if Mebaja Hamer exceeds 30
+        mebajaHamer -= 30;  // Adjust if it exceeds 30 days
+        ninevehMonth = "Yekatit"; // Move Nineveh to the next month
     }
-    
     document.getElementById('mebajaHamer').innerText = `${ninevehMonth} ${mebajaHamer}`;
 
     // Step 9: Calculate fasting and holy days based on Nineveh
@@ -94,14 +89,51 @@ function calculateCalendar() {
     displayFastingDates(fastingDates);
 }
 
-// Helper function to calculate total days from Meskerem 1 to the given day
-function calculateTotalDays(month, day) {
-    const monthDays = {
-        "Meskerem": 0, "Tikimt": 30, "Hidar": 60, "Tahisas": 90,
-        "Tirr": 120, "Yekatit": 150, "Megabit": 180, "Miazia": 210,
-        "Ginbot": 240, "Sene": 270, "Hamle": 300, "Nehase": 330, "Pagumen": 360
+// Helper function to shift the day of the week to the previous day
+function shiftDayToPrevious(day) {
+    const dayMap = {
+        "Sunday": "Saturday",
+        "Monday": "Sunday",
+        "Tuesday": "Monday",
+        "Wednesday": "Tuesday",
+        "Thursday": "Wednesday",
+        "Friday": "Thursday",
+        "Saturday": "Friday"
     };
-    return monthDays[month] + day;
+    return dayMap[day];
+}
+
+// Function to get the Ethiopian day of the week for a given Ethiopian year, month, and day
+function getEthiopianWeekday(year, month, day) {
+    const ethiopianMonths = ["Meskerem", "Tikimt", "Hidar", "Tahisas", "Tirr", "Yekatit", "Megabit", "Miazia", "Ginbot", "Sene", "Hamle", "Nehase", "Pagumen"];
+    const ethiopianWeekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    // Step 1: Calculate the start of Meskerem 1 (New Year) in the Gregorian calendar
+    let gregorianYear = year + 7;
+    let meskerem1Date = new Date(gregorianYear, 8, 11); // September 11 is Meskerem 1
+
+    // Handle Ethiopian leap years (Meskerem 1 moves to September 12 in leap years)
+    if ((year + 1) % 4 === 0) {
+        meskerem1Date = new Date(gregorianYear, 8, 12); // Ethiopian leap year, Meskerem 1 is September 12
+    }
+
+    // Step 2: Calculate the total number of days from Meskerem 1 to the given date
+    const monthIndex = ethiopianMonths.indexOf(month);
+    const ethiopianMonthsDays = [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 5]; // Pagumen has 5 days
+    let daysFromMeskerem1 = day - 1; // Subtract 1 because we start counting from Meskerem 1
+
+    for (let i = 0; i < monthIndex; i++) {
+        daysFromMeskerem1 += ethiopianMonthsDays[i];
+    }
+
+    // Step 3: Calculate the Gregorian date corresponding to the given Ethiopian date
+    meskerem1Date.setDate(meskerem1Date.getDate() + daysFromMeskerem1);
+
+    // Step 4: Get the day of the week in the Gregorian calendar (0 = Sunday, 1 = Monday, etc.)
+    const gregorianDayOfWeek = meskerem1Date.getDay();
+
+    // Step 5: Map the Gregorian weekday back to the Ethiopian calendar's weekday
+    return ethiopianWeekdays[gregorianDayOfWeek];
 }
 
 // Helper function to calculate dates of fasting and holy days based on Nineveh
