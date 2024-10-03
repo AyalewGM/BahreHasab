@@ -1,5 +1,3 @@
-
-//Ayalew Mersha - October 1, 2024
 window.onload = function() {
     // Set default Ethiopian year to the current Ethiopian year (assuming current Gregorian year 2024 -> 2016 Ethiopian)
     const currentGregorianYear = new Date().getFullYear();
@@ -45,9 +43,8 @@ function calculateCalendar() {
     document.getElementById('abektie').innerText = abektie;
     document.getElementById('metqi').innerText = metqi;
 
-    // Step 6: Calculate Beale Metqi
-    let bealeMetqiMonth, ninevehMonth;
-    let bealeMetqiDay;
+    // Step 6: Calculate Beale Metqi and the day of the week
+    let bealeMetqiMonth, ninevehMonth, bealeMetqiDay, bealeMetqiTotalDays;
 
     if (metqi > 14) {
         bealeMetqiMonth = "Meskerem";
@@ -55,19 +52,52 @@ function calculateCalendar() {
         ninevehMonth = "Tirr";
     } else {
         bealeMetqiMonth = "Tikimt";
-        bealeMetqiDay = metqi + 30; // In Tikimt, add 30 to Metqi value
+        bealeMetqiDay = metqi + 30;
         ninevehMonth = "Yekatit";
     }
+    
+    // Calculate the total number of days since Meskerem 1 (starting day of the Ethiopian year)
+    bealeMetqiTotalDays = calculateTotalDays(bealeMetqiMonth, bealeMetqiDay);
 
-    document.getElementById('bealeMetqi').innerText = `${bealeMetqiMonth} ${bealeMetqiDay}`;
+    // Find the day of the week for Beale Metqi
+    const bealeMetqiDayOfWeekIndex = (bealeMetqiTotalDays + tinteQemer) % 7; // Adjusted for the New Year start day
+    const bealeMetqiDayOfWeek = daysOfWeek[bealeMetqiDayOfWeekIndex];
+    document.getElementById('bealeMetqi').innerText = `${bealeMetqiMonth} ${bealeMetqiDay} (${bealeMetqiDayOfWeek})`;
 
-    // Step 7: Calculate Mebaja Hamer (Nineveh)
-    const mebajaHamer = bealeMetqiDay; // Mebaja Hamer number is the same as Beale Metqi day
+    // Step 7: Lookup the Tewsak for the day of the week
+    const tewsakTable = {
+        "Sunday": 7,
+        "Monday": 6,
+        "Tuesday": 5,
+        "Wednesday": 4,
+        "Thursday": 3,
+        "Friday": 2,
+        "Saturday": 8
+    };
+    const tewsakOfDay = tewsakTable[bealeMetqiDayOfWeek];
+
+    // Step 8: Calculate Mebaja Hamer
+    let mebajaHamer = bealeMetqiDay + tewsakOfDay;
+    if (mebajaHamer > 30) {
+        mebajaHamer -= 30;
+        ninevehMonth = "Yekatit"; // Move Nineveh to the next month if Mebaja Hamer exceeds 30
+    }
+    
     document.getElementById('mebajaHamer').innerText = `${ninevehMonth} ${mebajaHamer}`;
 
-    // Step 8: Calculate fasting and holy days based on Nineveh
+    // Step 9: Calculate fasting and holy days based on Nineveh
     const fastingDates = calculateFastingDates(ninevehMonth, mebajaHamer);
     displayFastingDates(fastingDates);
+}
+
+// Helper function to calculate total days from Meskerem 1 to the given day
+function calculateTotalDays(month, day) {
+    const monthDays = {
+        "Meskerem": 0, "Tikimt": 30, "Hidar": 60, "Tahisas": 90,
+        "Tirr": 120, "Yekatit": 150, "Megabit": 180, "Miazia": 210,
+        "Ginbot": 240, "Sene": 270, "Hamle": 300, "Nehase": 330, "Pagumen": 360
+    };
+    return monthDays[month] + day;
 }
 
 // Helper function to calculate dates of fasting and holy days based on Nineveh
