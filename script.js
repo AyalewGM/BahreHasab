@@ -52,7 +52,11 @@ function calculateCalendar() {
         ninevehMonth = "Tirr";
     } else {
         bealeMetqiMonth = "Tikimt";
-        bealeMetqiDay = metqi + 30;
+        bealeMetqiDay = metqi;
+        if (bealeMetqiDay > 30) {
+            bealeMetqiDay -= 30;  // Fix: adjust Beale Metqi to stay within month limits
+            bealeMetqiMonth = "Tikimt";
+        }
         ninevehMonth = "Yekatit";
     }
     
