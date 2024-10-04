@@ -78,6 +78,7 @@ function calculateCalendar() {
         "Friday": 2,
         "Saturday": 8
     };
+
     const tewsakOfDay = tewsakTable[bealeMetqiDayOfWeek];
 
     // Step 8: Calculate Mebaja Hamer (Beale Metqi + Tewsak)
@@ -108,37 +109,49 @@ function shiftDayToPrevious(day) {
 }
 
 // Function to get the Ethiopian day of the week for a given Ethiopian year, month, and day
-function getEthiopianWeekday(year, month, day) {
+function getEthiopianDayOfWeek(ethiopianYear, ethiopianMonth, ethiopianDay) {
+    // Ethiopian months array
     const ethiopianMonths = ["Meskerem", "Tikimt", "Hidar", "Tahisas", "Tirr", "Yekatit", "Megabit", "Miazia", "Ginbot", "Sene", "Hamle", "Nehase", "Pagumen"];
+    
+    // Ethiopian weekdays array
     const ethiopianWeekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    
+    // Step 1: Determine the Gregorian year equivalent for the given Ethiopian year
+    const gregorianYear = ethiopianYear + 7; // Ethiopian year is 7-8 years behind Gregorian
 
-    // Step 1: Calculate the start of Meskerem 1 (New Year) in the Gregorian calendar
-    let gregorianYear = year + 7;
-    let meskerem1Date = new Date(gregorianYear, 8, 11); // September 11 is Meskerem 1
+    // Step 2: Determine the Gregorian date of Meskerem 1 (New Year)
+    let meskerem1Date = new Date(Date.UTC(gregorianYear, 8, 11, 7, 0, 0)); // Meskerem 1 at 7:00 AM CET (September 11 UTC)
 
-    // Handle Ethiopian leap years (Meskerem 1 moves to September 12 in leap years)
-    if ((year + 1) % 4 === 0) {
-        meskerem1Date = new Date(gregorianYear, 8, 12); // Ethiopian leap year, Meskerem 1 is September 12
+    // Handle Ethiopian leap years (Meskerem 1 moves to September 12 in a leap year)
+    if ((ethiopianYear + 1) % 4 === 0) {
+        meskerem1Date = new Date(Date.UTC(gregorianYear, 8, 12, 7, 0, 0)); // September 12 UTC at 7:00 AM CET
     }
 
-    // Step 2: Calculate the total number of days from Meskerem 1 to the given date
-    const monthIndex = ethiopianMonths.indexOf(month);
+    // Step 3: Calculate the total number of days from Meskerem 1 to the given Ethiopian date
+    const monthIndex = ethiopianMonths.indexOf(ethiopianMonth);
     const ethiopianMonthsDays = [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 5]; // Pagumen has 5 days
-    let daysFromMeskerem1 = day - 1; // Subtract 1 because we start counting from Meskerem 1
 
+    let daysFromMeskerem1 = ethiopianDay - 1; // Subtract 1 since Meskerem 1 is the start of the year
+
+    // Add the days for each full month up to the given month
     for (let i = 0; i < monthIndex; i++) {
         daysFromMeskerem1 += ethiopianMonthsDays[i];
     }
 
-    // Step 3: Calculate the Gregorian date corresponding to the given Ethiopian date
-    meskerem1Date.setDate(meskerem1Date.getDate() + daysFromMeskerem1);
+    // Step 4: Add the calculated days to Meskerem 1 to get the Gregorian date
+    meskerem1Date.setUTCDate(meskerem1Date.getUTCDate() + daysFromMeskerem1);
 
-    // Step 4: Get the day of the week in the Gregorian calendar (0 = Sunday, 1 = Monday, etc.)
-    const gregorianDayOfWeek = meskerem1Date.getDay();
+    // Step 5: Get the Gregorian day of the week at 7:00 AM Central European Time (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+    const gregorianDayOfWeek = meskerem1Date.getUTCDay();
 
-    // Step 5: Map the Gregorian weekday back to the Ethiopian calendar's weekday
+    // Step 6: Return the corresponding Ethiopian weekday
     return ethiopianWeekdays[gregorianDayOfWeek];
 }
+
+// Example usage
+const dayOfWeek = getEthiopianDayOfWeek(2016, "Meskerem", 22);
+console.log(dayOfWeek);  // Output: Should return the correct day of the week considering 7:00 AM CET
+
 
 // Helper function to calculate dates of fasting and holy days based on Nineveh
 function calculateFastingDates(ninevehMonth, ninevehDay) {
@@ -152,7 +165,7 @@ function calculateFastingDates(ninevehMonth, ninevehDay) {
         { name: "እርገት", tewsak: 108 },
         { name: "ጰራቅሊጦስ", tewsak: 118 },
         { name: "ጾመ ሐዋርያት", tewsak: 119 },
-        { name: "አርብ እና እሮብ መጀመሪያ", tewsak: 121 }
+        { name: "ጾመ ድህነት", tewsak: 121 }
     ];
 
     const results = fastingAndHolyDays.map(day => {
