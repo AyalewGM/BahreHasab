@@ -1,3 +1,7 @@
+
+//Ayalew G Mersha, October 1, 2024 
+//Bahre Hasab
+
 window.onload = function() {
     // Set default Ethiopian year to the current Ethiopian year (assuming current Gregorian year 2024 -> 2016 Ethiopian)
     const currentGregorianYear = new Date().getFullYear();
