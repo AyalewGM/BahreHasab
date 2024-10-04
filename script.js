@@ -20,7 +20,7 @@ function calculateCalendar() {
     document.getElementById('ameteAlem').innerText = ameteAlem;
 
     // Step 2: Calculate Evangelist (Wengelawi)
-    const evangelists = ["Yohannes (John)", "Mathewos (Matthew)", "Markos (Mark)", "Lukas (Luke)"];
+    const evangelists = ["ዮሐንስ", "ማቴዎስ", "ማርቆስ", "ሉቃስ"];
     const wengelawiIndex = ameteAlem % 4;
     const wengelawi = evangelists[wengelawiIndex];
     document.getElementById('wengelawi').innerText = wengelawi;
@@ -60,7 +60,7 @@ function calculateCalendar() {
     let bealeMetqiDayOfWeek = getEthiopianWeekday(ethiopianYear, bealeMetqiMonth, bealeMetqiDay);
 
     // Shift Beale Metqi Day of the Week to the Previous Day
-    bealeMetqiDayOfWeek = shiftDayToPrevious(bealeMetqiDayOfWeek);
+    //bealeMetqiDayOfWeek = shiftDayToPrevious(bealeMetqiDayOfWeek);
 
     document.getElementById('bealeMetqi').innerText = `${bealeMetqiMonth} ${bealeMetqiDay} (${bealeMetqiDayOfWeek})`;
 
@@ -139,16 +139,16 @@ function getEthiopianWeekday(year, month, day) {
 // Helper function to calculate dates of fasting and holy days based on Nineveh
 function calculateFastingDates(ninevehMonth, ninevehDay) {
     const fastingAndHolyDays = [
-        { name: "Abiy Tsome", tewsak: 14 },
-        { name: "Debre Zeit", tewsak: 41 },
-        { name: "Hosanna", tewsak: 62 },
-        { name: "Good Friday (Siklet)", tewsak: 67 },
-        { name: "Tinsaye (Resurrection)", tewsak: 69 },
-        { name: "Rkbe Kahnat", tewsak: 93 },
-        { name: "Ascension", tewsak: 108 },
-        { name: "Paraclete", tewsak: 118 },
-        { name: "Fast of the Holy Apostles", tewsak: 119 },
-        { name: "Weekly Fast (Wednesday and Friday)", tewsak: 121 }
+        { name: "አብይ ጾም", tewsak: 14 },
+        { name: "ደብረ ዘይት", tewsak: 41 },
+        { name: "ሆሳእና", tewsak: 62 },
+        { name: "ስቅለት", tewsak: 67 },
+        { name: "ትንሳኤ", tewsak: 69 },
+        { name: "ርክበ ካህናት", tewsak: 93 },
+        { name: "እርገት", tewsak: 108 },
+        { name: "ጰራቅሊጦስ", tewsak: 118 },
+        { name: "ጾመ ሐዋርያት", tewsak: 119 },
+        { name: "አርብ እና እሮብ መጀመሪያ", tewsak: 121 }
     ];
 
     const results = fastingAndHolyDays.map(day => {
