@@ -30,7 +30,8 @@ function calculateCalendar() {
     document.getElementById('wengelawi').innerText = wengelawi;
 
     // Step 3: Calculate the correct day of New Year (Tinte Qemer)
-    const tinteQemer = getEthiopianWeekday(ethiopianYear, "Meskerem", 1);
+
+    const tinteQemer = getEthiopianDayOfWeek(ethiopianYear, "Meskerem", 1);
     document.getElementById('tinteQemer').innerText = `Meskerem 1 (${tinteQemer})`;
 
     // Step 4: Calculate Metene Rabiet, Medeb, Wenber, Abektie, and Metqi
@@ -61,7 +62,7 @@ function calculateCalendar() {
     }
 
     // Step 6: Get the Ethiopian day of the week for Beale Metqi
-    let bealeMetqiDayOfWeek = getEthiopianWeekday(ethiopianYear, bealeMetqiMonth, bealeMetqiDay);
+    let bealeMetqiDayOfWeek = getEthiopianDayOfWeek(ethiopianYear, bealeMetqiMonth, bealeMetqiDay);
 
     // Shift Beale Metqi Day of the Week to the Previous Day
     //bealeMetqiDayOfWeek = shiftDayToPrevious(bealeMetqiDayOfWeek);
@@ -143,6 +144,7 @@ function getEthiopianDayOfWeek(ethiopianYear, ethiopianMonth, ethiopianDay) {
 
     // Step 5: Get the Gregorian day of the week at 7:00 AM Central European Time (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
     const gregorianDayOfWeek = meskerem1Date.getUTCDay();
+    console.log(gregorianDayOfWeek)
 
     // Step 6: Return the corresponding Ethiopian weekday
     return ethiopianWeekdays[gregorianDayOfWeek];
