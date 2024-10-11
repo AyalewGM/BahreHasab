@@ -138,18 +138,18 @@ function shiftDayToPrevious(day) {
 function mapMonthToAmharic(month) {
     const monthMap = {
        "Meskerem":"መስከረም",
-       "Tikimt"፡"ጥቅምት",
-       "Hidar"፡"ህዳር",
-       "Tahisas"፡"ታህሳስ",
-       "Tirr"፡"ጥር",
-       "Yekatit"፡"የካቲት",
-       "Megabit"፡"መጋቢት",
-       "Miazia"፡"ሚያዚያ",
-        "Ginbot"፡"ግንቦት",
-        "Sene"፡"ሰኔ",
-        "Hamle"፡"ሐምሌ",
-        "Nehase"፡"ነሐሴ",
-        "Pagumen"፡"ጰጉሜ"
+       "Tikimt":"ጥቅምት",
+       "Hidar":"ህዳር",
+       "Tahisas":"ታህሳስ",
+       "Tirr":"ጥር",
+       "Yekatit":"የካቲት",
+       "Megabit":"መጋቢት",
+       "Miazia":"ሚያዚያ",
+        "Ginbot":"ግንቦት",
+        "Sene":"ሰኔ",
+        "Hamle":"ሐምሌ",
+        "Nehase":"ነሐሴ",
+        "Pagumen":"ጰጉሜ"
     };
     return monthMap[month];
 }
