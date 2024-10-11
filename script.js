@@ -3,9 +3,9 @@
 //Bahre Hasab
 
 window.onload = function() {
-    // Set default Ethiopian year to the current Ethiopian year (assuming current Gregorian year 2024 -> 2016 Ethiopian)
+    // Find current Ethiopian year
     const currentGregorianYear = new Date().getFullYear();
-    const currentEthiopianYear = currentGregorianYear - 8;
+    const currentEthiopianYear = calculateCurrentEthiopianYear();
     document.getElementById('ethiopianYear').value = currentEthiopianYear;
     
     // Trigger calculation on page load
@@ -14,6 +14,32 @@ window.onload = function() {
     // Add event listener for the year change
     document.getElementById('ethiopianYear').addEventListener('change', calculateCalendar);
 };
+
+function calculateCurrentEthiopianYear() {
+    const today = new Date(); // Get current date
+    const gregorianYear = today.getFullYear(); // Current Gregorian year
+    const gregorianMonth = today.getMonth(); // 0 = January, 1 = February, ..., 11 = December
+    const gregorianDay = today.getDate(); // Day of the month
+
+    // Step 1: Determine if the current year is a Gregorian leap year
+    const isGregorianLeapYear = (gregorianYear % 4 === 0 && (gregorianYear % 100 !== 0 || gregorianYear % 400 === 0));
+
+    // Step 2: Define the cutoff date for the Ethiopian New Year (Meskerem 1)
+    const ethiopianNewYearDay = isGregorianLeapYear ? 12 : 11; // September 12 in leap years, September 11 otherwise
+
+    // Step 3: Determine the Ethiopian year based on the current date
+    if (gregorianMonth < 8 || (gregorianMonth === 8 && gregorianDay < ethiopianNewYearDay)) {
+        // If we are before September 11 (or September 12 in a leap year), it's the old Ethiopian year
+        return gregorianYear - 8;
+    } else {
+        // If we are after September 11 (or September 12 in a leap year), it's the new Ethiopian year
+        return gregorianYear - 7;
+    }
+}
+
+// ምሳሌ
+const ethiopianYear = calculateCurrentEthiopianYear();
+console.log("Current Ethiopian Year:", ethiopianYear);
 
 function calculateCalendar() {
     const ethiopianYear = parseInt(document.getElementById('ethiopianYear').value);
@@ -32,7 +58,7 @@ function calculateCalendar() {
     // Step 3: Calculate the correct day of New Year (Tinte Qemer)
 
     const tinteQemer = getEthiopianDayOfWeek(ethiopianYear, "Meskerem", 1);
-    document.getElementById('tinteQemer').innerText = `Meskerem 1 (${tinteQemer})`;
+    document.getElementById('tinteQemer').innerText = `መስከረም 1 (${tinteQemer})`;
 
     // Step 4: Calculate Metene Rabiet, Medeb, Wenber, Abektie, and Metqi
     const meteneRabiet = Math.floor(ameteAlem / 4);
@@ -108,7 +134,40 @@ function shiftDayToPrevious(day) {
     };
     return dayMap[day];
 }
+// የወሮቹን ስም ወደ አማርኛ ቀይር
+function mapMonthToAmharic(month) {
+    const monthMap = {
+       "Meskerem":"መስከረም",
+       "Tikimt"፡"ጥቅምት",
+       "Hidar"፡"ህዳር",
+       "Tahisas"፡"ታህሳስ",
+       "Tirr"፡"ጥር",
+       "Yekatit"፡"የካቲት",
+       "Megabit"፡"መጋቢት",
+       "Miazia"፡"ሚያዚያ",
+        "Ginbot"፡"ግንቦት",
+        "Sene"፡"ሰኔ",
+        "Hamle"፡"ሐምሌ",
+        "Nehase"፡"ነሐሴ",
+        "Pagumen"፡"ጰጉሜ"
+    };
+    return monthMap[month];
+}
 
+
+// የ እንግሊዝኛውን ቀን ወደ አማርኛ ቀይረው
+function mapWeekDaysToAmharic() {
+    const weekdayMap = {
+       "Sunday": "እሁድ",
+        "Monday": "ሰኞ",
+        "Tuesday": "ማክሰኞ",
+        "Wednesday": "ረቡእ",
+        "Thursday": "ሐሙስ",
+        "Friday": "አርብ",
+        "Saturday": "ቅዳሜ"
+    };
+    return monthMap[month];
+}
 // Function to get the Ethiopian day of the week for a given Ethiopian year, month, and day
 function getEthiopianDayOfWeek(ethiopianYear, ethiopianMonth, ethiopianDay) {
     // Ethiopian months array
@@ -118,7 +177,7 @@ function getEthiopianDayOfWeek(ethiopianYear, ethiopianMonth, ethiopianDay) {
     const ethiopianWeekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     
     // Step 1: Determine the Gregorian year equivalent for the given Ethiopian year
-    const gregorianYear = ethiopianYear + 7; // Ethiopian year is 7-8 years behind Gregorian
+    const gregorianYear = convertEthiopianToGregorian(ethiopianYear, ethiopianMonth, ethiopianDay); // Ethiopian year is 7-8 years behind Gregorian
 
     // Step 2: Determine the Gregorian date of Meskerem 1 (New Year)
     let meskerem1Date = new Date(Date.UTC(gregorianYear, 8, 11, 7, 0, 0)); // Meskerem 1 at 7:00 AM CET (September 11 UTC)
@@ -150,10 +209,61 @@ function getEthiopianDayOfWeek(ethiopianYear, ethiopianMonth, ethiopianDay) {
     return ethiopianWeekdays[gregorianDayOfWeek];
 }
 
-// Example usage
-const dayOfWeek = getEthiopianDayOfWeek(2016, "Meskerem", 22);
-console.log(dayOfWeek);  // Output: Should return the correct day of the week considering 7:00 AM CET
 
+function convertEthiopianToGregorian(ethiopianYear, ethiopianMonth, ethiopianDay) {
+    // Ethiopian months array
+    const ethiopianMonths = ["Meskerem", "Tikimt", "Hidar", "Tahisas", "Tirr", "Yekatit", "Megabit", "Miazia", "Ginbot", "Sene", "Hamle", "Nehase", "Pagumen"];
+
+    // Ethiopian weekdays array
+    const ethiopianMonthsDays = [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 5]; // Regular year, 5 days in Pagumen
+
+    // Step 1: Check if the Ethiopian year is a leap year
+    const isEthiopianLeapYear = (ethiopianYear % 4 === 3); // Ethiopian leap year every 4 years
+    if (isEthiopianLeapYear) {
+        ethiopianMonthsDays[12] = 6; // Pagumen has 6 days in an Ethiopian leap year
+    }
+
+    // Step 2: Determine the Gregorian year equivalent
+    let gregorianYear;
+    const monthIndex = ethiopianMonths.indexOf(ethiopianMonth);
+
+    // If the Ethiopian date is between Meskerem 1 and Tahsas 30, the Gregorian year is 7 years ahead
+    // If the Ethiopian date is between Tirr 1 and Pagumen, the Gregorian year is 8 years ahead
+    if (monthIndex <= 3) {
+        gregorianYear = ethiopianYear + 7;
+    } else {
+        gregorianYear = ethiopianYear + 8;
+    }
+
+    // Step 3: Calculate the Gregorian equivalent of Meskerem 1
+    let meskerem1Date = new Date(gregorianYear, 8, 11); // Meskerem 1 is September 11 in a normal year
+
+    // Adjust for Ethiopian leap years (Meskerem 1 moves to September 12 in Ethiopian leap years)
+    if ((ethiopianYear + 1) % 4 === 0) {
+        meskerem1Date = new Date(gregorianYear, 8, 12); // Meskerem 1 is September 12 in Ethiopian leap years
+    }
+
+    // Step 4: Calculate the total number of days from Meskerem 1 to the given Ethiopian date
+    let daysFromMeskerem1 = ethiopianDay - 1; // Start counting from Meskerem 1
+
+    // Add the number of days for each full month up to the given month
+    for (let i = 0; i < monthIndex; i++) {
+        daysFromMeskerem1 += ethiopianMonthsDays[i];
+    }
+
+    // Step 5: Add the calculated days to Meskerem 1 to get the Gregorian date
+    meskerem1Date.setDate(meskerem1Date.getDate() + daysFromMeskerem1);
+
+    // Return the Gregorian year, month, and day
+    const gregorianMonth = meskerem1Date.getMonth() + 1; // Month is 0-indexed in JavaScript
+    const gregorianDay = meskerem1Date.getDate();
+
+    return {
+        year: meskerem1Date.getFullYear(),
+        month: gregorianMonth,
+        day: gregorianDay
+    };
+}
 
 // Helper function to calculate dates of fasting and holy days based on Nineveh
 function calculateFastingDates(ninevehMonth, ninevehDay) {
@@ -179,7 +289,24 @@ function calculateFastingDates(ninevehMonth, ninevehDay) {
     return results;
 }
 
-// Helper function to add days to a date in the Ethiopian calendar
+// የፈረንጆቹን አመት አግኝ፡፡
+function getGregorianYear(ethiopianYear, ethiopianMonth) {
+
+    const ethiopianMonths = ["Meskerem", "Tikimt", "Hidar", "Tahisas", "Tirr", "Yekatit", "Megabit", "Miazia", "Ginbot", "Sene", "Hamle", "Nehase", "Pagumen"];
+
+    // Step 1: Find the index of the Ethiopian month
+    const monthIndex = ethiopianMonths.indexOf(ethiopianMonth);
+
+    // Step 2: If the month is between Meskerem (index 0) and Tahsas (index 3), the Gregorian year is 7 years ahead
+    // If the month is between Tirr (index 4) and Pagumen (index 12), the Gregorian year is 8 years ahead
+    if (monthIndex <= 3) {
+        return ethiopianYear + 7;
+    } else {
+        return ethiopianYear + 8;
+    }
+
+
+// ስሌት
 function addDaysToEthiopianDate(startMonth, startDay, daysToAdd) {
     const months = ["Meskerem", "Tikimt", "Hidar", "Tahisas", "Tirr", "Yekatit", "Megabit", "Miazia", "Ginbot", "Sene", "Hamle", "Nehase", "Pagumen"];
     let currentMonthIndex = months.indexOf(startMonth);
@@ -199,10 +326,10 @@ function addDaysToEthiopianDate(startMonth, startDay, daysToAdd) {
         }
     }
 
-    return [months[currentMonthIndex], currentDay];
+    return [mapMonthToAmharic(months[currentMonthIndex]), currentDay];
 }
 
-// Display fasting and holy days
+// አጽዋማት እና በአላት አሳይ
 function displayFastingDates(fastingDates) {
     const fastingTable = document.getElementById('fastingTable');
     fastingTable.innerHTML = '';  // Clear previous results
