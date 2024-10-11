@@ -152,7 +152,7 @@ function mapMonthToAmharic(month) {
 
 
 // የ እንግሊዝኛውን ቀን ወደ አማርኛ ቀይረው
-function mapWeekDaysToAmharic() {
+function mapWeekDaysToAmharic(weekday) {
     const weekdayMap = {
        "Sunday": "እሁድ",
         "Monday": "ሰኞ",
@@ -162,7 +162,7 @@ function mapWeekDaysToAmharic() {
         "Friday": "አርብ",
         "Saturday": "ቅዳሜ"
     };
-    return monthMap[month];
+    return weekdayMap[weekday];
 }
 // Function to get the Ethiopian day of the week for a given Ethiopian year, month, and day
 function getEthiopianDayOfWeek(ethiopianYear, ethiopianMonth, ethiopianDay) {
