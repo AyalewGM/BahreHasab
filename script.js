@@ -37,10 +37,6 @@ function calculateCurrentEthiopianYear() {
     }
 }
 
-// ምሳሌ
-const ethiopianYear = calculateCurrentEthiopianYear();
-console.log("Current Ethiopian Year:", ethiopianYear);
-
 function calculateCalendar() {
     const ethiopianYear = parseInt(document.getElementById('ethiopianYear').value);
     
@@ -304,7 +300,7 @@ function getGregorianYear(ethiopianYear, ethiopianMonth) {
     } else {
         return ethiopianYear + 8;
     }
-
+}
 
 // ስሌት
 function addDaysToEthiopianDate(startMonth, startDay, daysToAdd) {
