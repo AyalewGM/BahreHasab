@@ -54,7 +54,7 @@ function calculateCalendar() {
     // Step 3: Calculate the correct day of New Year (Tinte Qemer)
 
     const tinteQemer = getEthiopianDayOfWeek(ethiopianYear, "Meskerem", 1);
-    document.getElementById('tinteQemer').innerText = `መስከረም 1 (${tinteQemer})`;
+    document.getElementById('tinteQemer').innerText = `መስከረም 1 (${mapWeekDaysToAmharic(tinteQemer)})`;
 
     // Step 4: Calculate Metene Rabiet, Medeb, Wenber, Abektie, and Metqi
     const meteneRabiet = Math.floor(ameteAlem / 4);
@@ -89,7 +89,7 @@ function calculateCalendar() {
     // Shift Beale Metqi Day of the Week to the Previous Day
     //bealeMetqiDayOfWeek = shiftDayToPrevious(bealeMetqiDayOfWeek);
 
-    document.getElementById('bealeMetqi').innerText = `${bealeMetqiMonth} ${bealeMetqiDay} (${bealeMetqiDayOfWeek})`;
+    document.getElementById('bealeMetqi').innerText = `${mapMonthToAmharic(bealeMetqiMonth)} ${bealeMetqiDay} (${mapWeekDaysToAmharic(bealeMetqiDayOfWeek)})`;
 
     // Step 7: Lookup the Tewsak for the adjusted day of the week
     const tewsakTable = {
