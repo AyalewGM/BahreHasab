@@ -110,7 +110,7 @@ function calculateCalendar() {
         mebajaHamer -= 30;  // Adjust if it exceeds 30 days
         ninevehMonth = "Yekatit"; // Move Nineveh to the next month
     }
-    document.getElementById('mebajaHamer').innerText = `${ninevehMonth} ${mebajaHamer}`;
+    document.getElementById('mebajaHamer').innerText = `${mapMonthToAmharic(ninevehMonth)} ${mebajaHamer}`;
 
     // Step 9: Calculate fasting and holy days based on Nineveh
     const fastingDates = calculateFastingDates(ninevehMonth, mebajaHamer);
@@ -164,7 +164,7 @@ function mapWeekDaysToAmharic(weekday) {
     };
     return weekdayMap[weekday];
 }
-// Function to get the Ethiopian day of the week for a given Ethiopian year, month, and day
+// የሳምንቱን ቀን አግኝ
 function getEthiopianDayOfWeek(ethiopianYear, ethiopianMonth, ethiopianDay) {
     // Ethiopian months array
     const ethiopianMonths = ["Meskerem", "Tikimt", "Hidar", "Tahisas", "Tirr", "Yekatit", "Megabit", "Miazia", "Ginbot", "Sene", "Hamle", "Nehase", "Pagumen"];
@@ -173,8 +173,8 @@ function getEthiopianDayOfWeek(ethiopianYear, ethiopianMonth, ethiopianDay) {
     const ethiopianWeekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     
     // Step 1: Determine the Gregorian year equivalent for the given Ethiopian year
-    const gregorianYear = convertEthiopianToGregorian(ethiopianYear, ethiopianMonth, ethiopianDay); // Ethiopian year is 7-8 years behind Gregorian
-
+    //const gregorianYear = convertEthiopianToGregorian(ethiopianYear, ethiopianMonth, ethiopianDay); // Ethiopian year is 7-8 years behind Gregorian
+    const gregorianYear = getGregorianYear(ethiopianYear, ethiopianMonth)
     // Step 2: Determine the Gregorian date of Meskerem 1 (New Year)
     let meskerem1Date = new Date(Date.UTC(gregorianYear, 8, 11, 7, 0, 0)); // Meskerem 1 at 7:00 AM CET (September 11 UTC)
 
