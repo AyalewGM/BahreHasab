@@ -4,8 +4,9 @@
 
 window.onload = function() {
     // Find current Ethiopian year
-    const currentGregorianYear = new Date().getFullYear();
+    //const currentGregorianYear = new Date().getFullYear();
     const currentEthiopianYear = calculateCurrentEthiopianYear();
+    //Read from the textbox
     document.getElementById('ethiopianYear').value = currentEthiopianYear;
     
     // Trigger calculation on page load
@@ -53,15 +54,30 @@ function calculateCalendar() {
 
     // Step 3: Calculate the correct day of New Year (Tinte Qemer)
 
-    const tinteQemer = getEthiopianDayOfWeek(ethiopianYear, "Meskerem", 1);
-    document.getElementById('tinteQemer').innerText = `መስከረም 1 (${mapWeekDaysToAmharic(tinteQemer)})`;
+    //const tinteQemer = getEthiopianDayOfWeek(ethiopianYear, "Meskerem", 1);
 
     // Step 4: Calculate Metene Rabiet, Medeb, Wenber, Abektie, and Metqi
+
     const meteneRabiet = Math.floor(ameteAlem / 4);
+    const tinteQemer = (meteneRabiet + ameteAlem) % 7
+
     const medeb = ameteAlem % 19;
     const wenber = medeb === 0 ? 18 : medeb - 1;
     const abektie = (wenber * 11) % 30;
-    const metqi = (wenber * 19) % 30;
+    const metqi = 30 - abktie;
+    const tinteQemerTable = {
+
+        0:"Monday",
+        1:"Tuesday",
+        2:"Wednesday",
+        3:"Thursday",
+        4:"Friday",
+        5:"Saturday",
+        6:"Sunday",
+    };
+    var tinteQemerDate = tinteQemerTable[tinteQemer]
+    document.getElementById('tinteQemer').innerText = `መስከረም 1 (${mapWeekDaysToAmharic(tinteQemerDate)})`;
+
     document.getElementById('medeb').innerText = medeb;
     document.getElementById('wenber').innerText = wenber;
     document.getElementById('abektie').innerText = abektie;
@@ -69,7 +85,10 @@ function calculateCalendar() {
 
     // Step 5: Calculate Beale Metqi
     let bealeMetqiMonth, ninevehMonth, bealeMetqiDay;
-    if (metqi > 14) {
+    if (wenber === 0){
+     bealeMetqiMonth = "Meskerem";
+     bealeMetqiDay = 30;
+    }else if (metqi > 14) {
         bealeMetqiMonth = "Meskerem";
         bealeMetqiDay = metqi;
         ninevehMonth = "Tirr";
@@ -117,19 +136,6 @@ function calculateCalendar() {
     displayFastingDates(fastingDates);
 }
 
-// Helper function to shift the day of the week to the previous day
-function shiftDayToPrevious(day) {
-    const dayMap = {
-        "Sunday": "Saturday",
-        "Monday": "Sunday",
-        "Tuesday": "Monday",
-        "Wednesday": "Tuesday",
-        "Thursday": "Wednesday",
-        "Friday": "Thursday",
-        "Saturday": "Friday"
-    };
-    return dayMap[day];
-}
 // የወሮቹን ስም ወደ አማርኛ ቀይር
 function mapMonthToAmharic(month) {
     const monthMap = {
