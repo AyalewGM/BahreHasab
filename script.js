@@ -64,7 +64,7 @@ function calculateCalendar() {
     const medeb = ameteAlem % 19;
     const wenber = medeb === 0 ? 18 : medeb - 1;
     const abektie = (wenber * 11) % 30;
-    const metqi = 30 - abktie;
+    const metqi = 30 - abektie;
     const tinteQemerTable = {
 
         0:"Monday",
