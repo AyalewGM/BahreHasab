@@ -76,6 +76,7 @@ function calculateCalendar() {
         6:"Sunday",
     };
     var tinteQemerDate = tinteQemerTable[tinteQemer]
+
     document.getElementById('tinteQemer').innerText = `መስከረም 1 (${mapWeekDaysToAmharic(tinteQemerDate)})`;
 
     document.getElementById('medeb').innerText = medeb;
@@ -85,10 +86,7 @@ function calculateCalendar() {
 
     // Step 5: Calculate Beale Metqi
     let bealeMetqiMonth, ninevehMonth, bealeMetqiDay;
-    if (wenber === 0){
-     bealeMetqiMonth = "Meskerem";
-     bealeMetqiDay = 30;
-    }else if (metqi > 14) {
+    if (metqi > 14) {
         bealeMetqiMonth = "Meskerem";
         bealeMetqiDay = metqi;
         ninevehMonth = "Tirr";
@@ -103,7 +101,8 @@ function calculateCalendar() {
     }
 
     // Step 6: Get the Ethiopian day of the week for Beale Metqi
-    let bealeMetqiDayOfWeek = getEthiopianDayOfWeek(ethiopianYear, bealeMetqiMonth, bealeMetqiDay);
+    let bealeMetqiDayOfWeek = getEthiopianDayOfWeek(tinteQemerDate, bealeMetqiMonth + " " + bealeMetqiDay);
+   //let bealeMetqiDayOfWeek = getEthiopianDayOfWeek(ethiopianYear, bealeMetqiMonth, bealeMetqiDay);
 
     // Shift Beale Metqi Day of the Week to the Previous Day
     //bealeMetqiDayOfWeek = shiftDayToPrevious(bealeMetqiDayOfWeek);
@@ -171,45 +170,115 @@ function mapWeekDaysToAmharic(weekday) {
     return weekdayMap[weekday];
 }
 // የሳምንቱን ቀን አግኝ
-function getEthiopianDayOfWeek(ethiopianYear, ethiopianMonth, ethiopianDay) {
-    // Ethiopian months array
-    const ethiopianMonths = ["Meskerem", "Tikimt", "Hidar", "Tahisas", "Tirr", "Yekatit", "Megabit", "Miazia", "Ginbot", "Sene", "Hamle", "Nehase", "Pagumen"];
-    
-    // Ethiopian weekdays array
-    const ethiopianWeekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    
-    // Step 1: Determine the Gregorian year equivalent for the given Ethiopian year
-    //const gregorianYear = convertEthiopianToGregorian(ethiopianYear, ethiopianMonth, ethiopianDay); // Ethiopian year is 7-8 years behind Gregorian
-    const gregorianYear = getGregorianYear(ethiopianYear, ethiopianMonth)
-    // Step 2: Determine the Gregorian date of Meskerem 1 (New Year)
-    let meskerem1Date = new Date(Date.UTC(gregorianYear, 8, 11, 7, 0, 0)); // Meskerem 1 at 7:00 AM CET (September 11 UTC)
+function getEthiopianDayOfWeek(startingDay, targetDate) {
+    /**
+     * Calculate the day of the week for a given Ethiopian date, counting from Meskerem 1.
+     *
+     * @param {string} startingDay - The day of the week for Meskerem 1 (e.g., 'Tuesday').
+     * @param {string} targetDate - The target Ethiopian date in the format "Month Day" (e.g., 'Tirr 28').
+     *
+     * @returns {string} The day of the week corresponding to the given Ethiopian date.
+     */
 
-    // Handle Ethiopian leap years (Meskerem 1 moves to September 12 in a leap year)
-    if ((ethiopianYear + 1) % 4 === 0) {
-        meskerem1Date = new Date(Date.UTC(gregorianYear, 8, 12, 7, 0, 0)); // September 12 UTC at 7:00 AM CET
+    // Map day names to indices (Sunday=0, Monday=1, ..., Saturday=6)
+    const dayIndex = {"Sunday": 0, "Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5, "Saturday": 6};
+
+    // Ethiopian calendar month order and their number of days
+    const ethiopianMonthDays = {
+        "Meskerem": 30,
+        "Tikimt": 30,
+        "Hidar": 30,
+        "Tahsas": 30,
+        "Tir": 30,
+        "Yekatit": 30,
+        "Megabit": 30,
+        "Miyazya": 30,
+        "Ginbot": 30,
+        "Sene": 30,
+        "Hamle": 30,
+        "Nehase": 30,
+        "Pagumen": 5  // 6 in leap year
+    };
+
+    // Extract the month and day from the target date
+    let [month, day] = targetDate.split(" ");
+    day = parseInt(day, 10); // Convert day to an integer
+
+    // Validate inputs
+    if (!ethiopianMonthDays.hasOwnProperty(month)) {
+        throw new Error(`Invalid month name: ${month}`);
     }
 
-    // Step 3: Calculate the total number of days from Meskerem 1 to the given Ethiopian date
-    const monthIndex = ethiopianMonths.indexOf(ethiopianMonth);
-    const ethiopianMonthsDays = [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 5]; // Pagumen has 5 days
-
-    let daysFromMeskerem1 = ethiopianDay - 1; // Subtract 1 since Meskerem 1 is the start of the year
-
-    // Add the days for each full month up to the given month
-    for (let i = 0; i < monthIndex; i++) {
-        daysFromMeskerem1 += ethiopianMonthsDays[i];
+    if (day < 1 || day > ethiopianMonthDays[month]) {
+        throw new Error(`Invalid day for ${month}: ${day}`);
     }
 
-    // Step 4: Add the calculated days to Meskerem 1 to get the Gregorian date
-    meskerem1Date.setUTCDate(meskerem1Date.getUTCDate() + daysFromMeskerem1);
+    if (!dayIndex.hasOwnProperty(startingDay)) {
+        throw new Error(`Invalid starting day of the week: ${startingDay}`);
+    }
 
-    // Step 5: Get the Gregorian day of the week at 7:00 AM Central European Time (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
-    const gregorianDayOfWeek = meskerem1Date.getUTCDay();
-    console.log(gregorianDayOfWeek)
+    // Calculate the total days from Meskerem 1 to the target date
+    let totalDays = 0;
 
-    // Step 6: Return the corresponding Ethiopian weekday
-    return ethiopianWeekdays[gregorianDayOfWeek];
+    for (const [monthName, daysInMonth] of Object.entries(ethiopianMonthDays)) {
+        if (monthName === month) { // When we reach the target month, add only the specific day number
+            totalDays += (day - 1); // Subtract 1 because Meskerem 1 is already counted
+            break;
+        }
+        totalDays += daysInMonth; // Add full days of the previous months
+    }
+
+    // Calculate the day of the week for the target date
+    const startDayIndex = dayIndex[startingDay]; // Index of the starting day (e.g., Tuesday = 2)
+    const dayOfWeekIndex = (startDayIndex + totalDays) % 7; // Calculate day of the week index
+
+    // Reverse map index back to day name
+    const indexToDay = Object.fromEntries(Object.entries(dayIndex).map(([k, v]) => [v, k]));
+    const resultDayOfWeek = indexToDay[dayOfWeekIndex];
+
+    return resultDayOfWeek;
 }
+//
+//
+//function getEthiopianDayOfWeek(ethiopianYear, ethiopianMonth, ethiopianDay) {
+//    // Ethiopian months array
+//    const ethiopianMonths = ["Meskerem", "Tikimt", "Hidar", "Tahisas", "Tirr", "Yekatit", "Megabit", "Miazia", "Ginbot", "Sene", "Hamle", "Nehase", "Pagumen"];
+//
+//    // Ethiopian weekdays array
+//    const ethiopianWeekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+//
+//    // Step 1: Determine the Gregorian year equivalent for the given Ethiopian year
+//    //const gregorianYear = convertEthiopianToGregorian(ethiopianYear, ethiopianMonth, ethiopianDay); // Ethiopian year is 7-8 years behind Gregorian
+//    const gregorianYear = getGregorianYear(ethiopianYear, ethiopianMonth)
+//    // Step 2: Determine the Gregorian date of Meskerem 1 (New Year)
+//    let meskerem1Date = new Date(Date.UTC(gregorianYear, 8, 11, 7, 0, 0)); // Meskerem 1 at 7:00 AM CET (September 11 UTC)
+//
+//    // Handle Ethiopian leap years (Meskerem 1 moves to September 12 in a leap year)
+//    if ((ethiopianYear + 1) % 4 === 0) {
+//        meskerem1Date = new Date(Date.UTC(gregorianYear, 8, 12, 7, 0, 0)); // September 12 UTC at 7:00 AM CET
+//    }
+//
+//    // Step 3: Calculate the total number of days from Meskerem 1 to the given Ethiopian date
+//    const monthIndex = ethiopianMonths.indexOf(ethiopianMonth);
+//    const ethiopianMonthsDays = [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 5]; // Pagumen has 5 days
+//
+//    let daysFromMeskerem1 = ethiopianDay - 1; // Subtract 1 since Meskerem 1 is the start of the year
+//
+//    // Add the days for each full month up to the given month
+//    for (let i = 0; i < monthIndex; i++) {
+//        daysFromMeskerem1 += ethiopianMonthsDays[i];
+//    }
+//
+//    // Step 4: Add the calculated days to Meskerem 1 to get the Gregorian date
+//    meskerem1Date.setUTCDate(meskerem1Date.getUTCDate() + daysFromMeskerem1);
+//
+//    // Step 5: Get the Gregorian day of the week at 7:00 AM Central European Time (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+//    const gregorianDayOfWeek = meskerem1Date.getUTCDay();
+//    console.log(gregorianDayOfWeek)
+//
+//    // Step 6: Return the corresponding Ethiopian weekday
+//    return ethiopianWeekdays[gregorianDayOfWeek];
+//}
 
 
 function convertEthiopianToGregorian(ethiopianYear, ethiopianMonth, ethiopianDay) {
