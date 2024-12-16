@@ -61,8 +61,10 @@ function calculateCalendar() {
     const meteneRabiet = Math.floor(ameteAlem / 4);
     const tinteQemer = (meteneRabiet + ameteAlem) % 7
 
-    const medeb = ameteAlem % 19;
-    const wenber = medeb === 0 ? 18 : medeb - 1;
+    let ameteAlemQ = ameteAlem % 19;
+
+    const medeb = ameteAlemQ === 0 ? 19 : ameteAlemQ;
+    const wenber = medeb - 1;
     const abektie = (wenber * 11) % 30;
     const metqi = 30 - abektie;
     const tinteQemerTable = {
