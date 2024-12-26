@@ -25,33 +25,33 @@ The project calculates various dates and observances in the Ethiopian calendar b
 ### Amete Alem
 
 The Amete Alem is calculated as:
-\[ \text{Amete Alem} = \text{Years Before Christ} + \text{Ethiopian Year} \]
+$$ \text{Amete Alem} = \text{Years Before Christ} + \text{Ethiopian Year} $$
 where Years Before Christ is 5500.
 
 ### Evangelist (Wengelawi)
 
 The Evangelist is determined by:
-\[ \text{Wengelawi Index} = \text{Amete Alem} \% 4 \]
+$$ \text{Wengelawi Index} = \text{Amete Alem} \% 4 $$
 The Evangelists are ["ዮሐንስ", "ማቴዎስ", "ማርቆስ", "ሉቃስ"].
 
 ### Tinte Qemer
 
 The Tinte Qemer is calculated as:
-\[ \text{Metene Rabiet} = \left\lfloor \frac{\text{Amete Alem}}{4} \right\rfloor \]
-\[ \text{Tinte Qemer} = (\text{Metene Rabiet} + \text{Amete Alem}) \% 7 \]
+$$ \text{Metene Rabiet} = \left\lfloor \frac{\text{Amete Alem}}{4} \right\rfloor $$
+$$ \text{Tinte Qemer} = (\text{Metene Rabiet} + \text{Amete Alem}) \% 7 $$
 
 ### Medeb and Wenber
 
 The Medeb and Wenber are calculated as:
-\[ \text{Medeb} = (\text{Amete Alem} \% 19) \]
+$$ \text{Medeb} = (\text{Amete Alem} \% 19) $$
 If Medeb is 0, it is set to 19.
-\[ \text{Wenber} = \text{Medeb} - 1 \]
+$$ \text{Wenber} = \text{Medeb} - 1 $$
 
 ### Abektie and Metqi
 
 The Abektie and Metqi are calculated as:
-\[ \text{Abektie} = (\text{Wenber} \times 11) \% 30 \]
-\[ \text{Metqi} = 30 - \text{Abektie} \]
+$$ \text{Abektie} = (\text{Wenber} \times 11) \% 30 $$
+$$ \text{Metqi} = 30 - \text{Abektie} $$
 
 ### Beale Metqi
 
@@ -62,7 +62,7 @@ The Beale Metqi is determined by the Metqi value:
 ### Mebaja Hamer
 
 The Mebaja Hamer is calculated as:
-\[ \text{Mebaja Hamer} = \text{Beale Metqi Day} + \text{Tewsak of Day} \]
+$$ \text{Mebaja Hamer} = \text{Beale Metqi Day} + \text{Tewsak of Day} $$
 If Mebaja Hamer exceeds 30, it is adjusted to the next month.
 
 ### Fasting and Holy Days
