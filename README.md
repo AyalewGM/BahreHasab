@@ -1,6 +1,6 @@
 # Bahre Hasab
 
-This project calculates various Ethiopian calendar dates and religious observances based on the Ethiopian year input. The calculations are based on traditional Ethiopian calendar rules and mathematical notations.
+This project calculates various Ethiopian calendar dates and religious observances based on the Ethiopian year input. The calculations are based on traditional Ethiopian calendar rules and mathematica[...]
 
 ## Table of Contents
 
@@ -18,40 +18,40 @@ This project calculates various Ethiopian calendar dates and religious observanc
 
 ## Overview
 
-The project calculates various dates and observances in the Ethiopian calendar based on the input Ethiopian year. The calculations include the Amete Alem, Evangelist, Tinte Qemer, Medeb, Wenber, Abektie, Metqi, Beale Metqi, Mebaja Hamer, and fasting and holy days.
+The project calculates various dates and observances in the Ethiopian calendar based on the input Ethiopian year. The calculations include the Amete Alem, Evangelist, Tinte Qemer, Medeb, Wenber, Abekt[...]
 
 ## Calculations
 
 ### Amete Alem
 
 The Amete Alem is calculated as:
-$$ \text{Amete Alem} = \text{Years Before Christ} + \text{Ethiopian Year} $$
+<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Amete Alem} = \text{Years Before Christ} + \text{Ethiopian Year}" /></p>
 where Years Before Christ is 5500.
 
 ### Evangelist (Wengelawi)
 
 The Evangelist is determined by:
-$$ \text{Wengelawi Index} = \text{Amete Alem} \% 4 $$
+<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Wengelawi Index} = \text{Amete Alem} \% 4" /></p>
 The Evangelists are ["ዮሐንስ", "ማቴዎስ", "ማርቆስ", "ሉቃስ"].
 
 ### Tinte Qemer
 
 The Tinte Qemer is calculated as:
-$$ \text{Metene Rabiet} = \left\lfloor \frac{\text{Amete Alem}}{4} \right\rfloor $$
-$$ \text{Tinte Qemer} = (\text{Metene Rabiet} + \text{Amete Alem}) \% 7 $$
+<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Metene Rabiet} = \left\lfloor \frac{\text{Amete Alem}}{4} \right\rfloor" /></p>
+<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Tinte Qemer} = (\text{Metene Rabiet} + \text{Amete Alem}) \% 7" /></p>
 
 ### Medeb and Wenber
 
 The Medeb and Wenber are calculated as:
-$$ \text{Medeb} = (\text{Amete Alem} \% 19) $$
+<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Medeb} = (\text{Amete Alem} \% 19)" /></p>
 If Medeb is 0, it is set to 19.
-$$ \text{Wenber} = \text{Medeb} - 1 $$
+<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Wenber} = \text{Medeb} - 1" /></p>
 
 ### Abektie and Metqi
 
 The Abektie and Metqi are calculated as:
-$$ \text{Abektie} = (\text{Wenber} \times 11) \% 30 $$
-$$ \text{Metqi} = 30 - \text{Abektie} $$
+<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Abektie} = (\text{Wenber} \times 11) \% 30" /></p>
+<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Metqi} = 30 - \text{Abektie}" /></p>
 
 ### Beale Metqi
 
@@ -62,7 +62,7 @@ The Beale Metqi is determined by the Metqi value:
 ### Mebaja Hamer
 
 The Mebaja Hamer is calculated as:
-$$ \text{Mebaja Hamer} = \text{Beale Metqi Day} + \text{Tewsak of Day} $$
+<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Mebaja Hamer} = \text{Beale Metqi Day} + \text{Tewsak of Day}" /></p>
 If Mebaja Hamer exceeds 30, it is adjusted to the next month.
 
 ### Fasting and Holy Days
