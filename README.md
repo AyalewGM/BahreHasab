@@ -25,33 +25,33 @@ The project calculates various dates and observances in the Ethiopian calendar b
 ### Amete Alem
 
 The Amete Alem is calculated as:
-<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Amete Alem} = \text{Years Before Christ} + \text{Ethiopian Year}" /></p>
+Amete Alem = Years Before Christ + Ethiopian Year
 where Years Before Christ is 5500.
 
 ### Evangelist (Wengelawi)
 
 The Evangelist is determined by:
-<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Wengelawi Index} = \text{Amete Alem} \% 4" /></p>
+Wengelawi Index = Amete Alem % 4
 The Evangelists are ["ዮሐንስ", "ማቴዎስ", "ማርቆስ", "ሉቃስ"].
 
 ### Tinte Qemer
 
 The Tinte Qemer is calculated as:
-<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Metene Rabiet} = \left\lfloor \frac{\text{Amete Alem}}{4} \right\rfloor" /></p>
-<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Tinte Qemer} = (\text{Metene Rabiet} + \text{Amete Alem}) \% 7" /></p>
+Metene Rabiet = floor(Amete Alem / 4)
+Tinte Qemer = (Metene Rabiet + Amete Alem) % 7
 
 ### Medeb and Wenber
 
 The Medeb and Wenber are calculated as:
-<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Medeb} = (\text{Amete Alem} \% 19)" /></p>
+Medeb = Amete Alem % 19
 If Medeb is 0, it is set to 19.
-<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Wenber} = \text{Medeb} - 1" /></p>
+Wenber = Medeb - 1
 
 ### Abektie and Metqi
 
 The Abektie and Metqi are calculated as:
-<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Abektie} = (\text{Wenber} \times 11) \% 30" /></p>
-<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Metqi} = 30 - \text{Abektie}" /></p>
+Abektie = (Wenber * 11) % 30
+Metqi = 30 - Abektie
 
 ### Beale Metqi
 
@@ -62,7 +62,7 @@ The Beale Metqi is determined by the Metqi value:
 ### Mebaja Hamer
 
 The Mebaja Hamer is calculated as:
-<p align="center"><img src="https://latex.codecogs.com/svg.latex?\text{Mebaja Hamer} = \text{Beale Metqi Day} + \text{Tewsak of Day}" /></p>
+Mebaja Hamer = Beale Metqi Day + Tewsak of Day
 If Mebaja Hamer exceeds 30, it is adjusted to the next month.
 
 ### Fasting and Holy Days
