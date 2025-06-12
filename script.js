@@ -190,11 +190,11 @@ function getEthiopianDayOfWeek(startingDay, targetDate) {
         "Meskerem": 30,
         "Tikimt": 30,
         "Hidar": 30,
-        "Tahsas": 30,
-        "Tir": 30,
+        "Tahisas": 30,
+        "Tirr": 30,
         "Yekatit": 30,
         "Megabit": 30,
-        "Miyazya": 30,
+        "Miazia": 30,
         "Ginbot": 30,
         "Sene": 30,
         "Hamle": 30,
@@ -300,7 +300,7 @@ function getEthiopianDayOfWeek(startingDay, targetDate) {
 //    let gregorianYear;
 //    const monthIndex = ethiopianMonths.indexOf(ethiopianMonth);
 //
-//    // If the Ethiopian date is between Meskerem 1 and Tahsas 30, the Gregorian year is 7 years ahead
+//    // If the Ethiopian date is between Meskerem 1 and Tahisas 30, the Gregorian year is 7 years ahead
 //    // If the Ethiopian date is between Tirr 1 and Pagumen, the Gregorian year is 8 years ahead
 //    if (monthIndex <= 3) {
 //        gregorianYear = ethiopianYear + 7;
@@ -370,7 +370,7 @@ function calculateFastingDates(ninevehMonth, ninevehDay) {
 //    // Step 1: Find the index of the Ethiopian month
 //    const monthIndex = ethiopianMonths.indexOf(ethiopianMonth);
 //
-//    // Step 2: If the month is between Meskerem (index 0) and Tahsas (index 3), the Gregorian year is 7 years ahead
+//    // Step 2: If the month is between Meskerem (index 0) and Tahisas (index 3), the Gregorian year is 7 years ahead
 //    // If the month is between Tirr (index 4) and Pagumen (index 12), the Gregorian year is 8 years ahead
 //    if (monthIndex <= 3) {
 //        return ethiopianYear + 7;
