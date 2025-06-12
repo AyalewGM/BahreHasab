@@ -198,7 +198,7 @@ function toGeez(num) {
 
     if (n >= 100) {
         const h = Math.floor(n / 100);
-        if (h > 1) result += digits[h];
+        if (h > 1) result += toGeez(h);
         result += hundred;
         n = n % 100;
     }
