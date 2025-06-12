@@ -51,52 +51,33 @@ function calculateCurrentEthiopianYear() {
     }
 }
 
-function calculateCalendar() {
-    const ethiopianYear = parseInt(document.getElementById('ethiopianYear').value);
-    
-    // Step 1: Calculate Amete Alem
+function computeCalendarValues(ethiopianYear) {
     const yearsBeforeChrist = 5500;
     const ameteAlem = yearsBeforeChrist + ethiopianYear;
-    updateResult('ameteAlem', formatNumber(ameteAlem));
 
-    // Step 2: Calculate Evangelist (Wengelawi)
     const evangelists = ["ዮሐንስ", "ማቴዎስ", "ማርቆስ", "ሉቃስ"];
     const wengelawiIndex = ameteAlem % 4;
     const wengelawi = evangelists[wengelawiIndex];
-    updateResult('wengelawi', wengelawi);
-    // Step 3: Calculate the correct day of New Year (Tinte Qemer)
-    // Step 4: Calculate Metene Rabiet, Medeb, Wenber, Abektie, and Metqi
 
     const meteneRabiet = Math.floor(ameteAlem / 4);
-    const tinteQemer = (meteneRabiet + ameteAlem) % 7
-
-    let ameteAlemQ = ameteAlem % 19;
+    const tinteQemer = (meteneRabiet + ameteAlem) % 7;
+    const ameteAlemQ = ameteAlem % 19;
 
     const medeb = ameteAlemQ === 0 ? 19 : ameteAlemQ;
     const wenber = medeb - 1;
     const abektie = (wenber * 11) % 30;
     const metqi = 30 - abektie;
     const tinteQemerTable = {
-
-        0:"Monday",
-        1:"Tuesday",
-        2:"Wednesday",
-        3:"Thursday",
-        4:"Friday",
-        5:"Saturday",
-        6:"Sunday",
+        0: "Monday",
+        1: "Tuesday",
+        2: "Wednesday",
+        3: "Thursday",
+        4: "Friday",
+        5: "Saturday",
+        6: "Sunday",
     };
-    var tinteQemerDate = tinteQemerTable[tinteQemer]
-    window.firstDayOfYear = tinteQemerDate;
+    const tinteQemerDate = tinteQemerTable[tinteQemer];
 
-    updateResult('tinteQemer', `መስከረም ${formatNumber(1)} (${mapWeekDaysToAmharic(tinteQemerDate)})`);
-
-    updateResult('medeb', formatNumber(medeb));
-    updateResult('wenber', formatNumber(wenber));
-    updateResult('abektie', formatNumber(abektie));
-    updateResult('metqi', formatNumber(metqi));
-
-    // Step 5: Calculate Beale Metqi
     let bealeMetqiMonth, ninevehMonth, bealeMetqiDay;
     if (metqi > 14) {
         bealeMetqiMonth = "Meskerem";
@@ -112,38 +93,75 @@ function calculateCalendar() {
         ninevehMonth = "Yekatit";
     }
 
-    // Step 6: Get the Ethiopian day of the week for Beale Metqi
-    let bealeMetqiDayOfWeek = getEthiopianDayOfWeek(tinteQemerDate, bealeMetqiMonth + " " + bealeMetqiDay);
+    const bealeMetqiDayOfWeek = getEthiopianDayOfWeek(
+        tinteQemerDate,
+        bealeMetqiMonth + " " + bealeMetqiDay
+    );
 
-    // Shift Beale Metqi Day of the Week to the Previous Day
-    //bealeMetqiDayOfWeek = shiftDayToPrevious(bealeMetqiDayOfWeek);
-
-    updateResult('bealeMetqi', `${mapMonthToAmharic(bealeMetqiMonth)} ${formatNumber(bealeMetqiDay)} (${mapWeekDaysToAmharic(bealeMetqiDayOfWeek)})`);
-
-    // Step 7: Lookup the Tewsak for the adjusted day of the week
     const tewsakTable = {
-        "Sunday": 7,
-        "Monday": 6,
-        "Tuesday": 5,
-        "Wednesday": 4,
-        "Thursday": 3,
-        "Friday": 2,
-        "Saturday": 8
+        Sunday: 7,
+        Monday: 6,
+        Tuesday: 5,
+        Wednesday: 4,
+        Thursday: 3,
+        Friday: 2,
+        Saturday: 8,
     };
 
-    const tewsakOfDay = tewsakTable[bealeMetqiDayOfWeek];
-
-    // Step 8: Calculate Mebaja Hamer (Beale Metqi + Tewsak)
-    let mebajaHamer = bealeMetqiDay + tewsakOfDay;
+    let mebajaHamer = bealeMetqiDay + tewsakTable[bealeMetqiDayOfWeek];
     if (mebajaHamer > 30) {
-        mebajaHamer -= 30;  // Adjust if it exceeds 30 days
-        ninevehMonth = "Yekatit"; // Move Nineveh to the next month
+        mebajaHamer -= 30;
+        ninevehMonth = "Yekatit";
     }
-    updateResult('mebajaHamer', `${mapMonthToAmharic(ninevehMonth)} ${formatNumber(mebajaHamer)}`);
 
-    // Step 9: Calculate fasting and holy days based on Nineveh
     const fastingDates = calculateFastingDates(ninevehMonth, mebajaHamer);
-    displayFastingDates(fastingDates);
+
+    return {
+        ameteAlem,
+        wengelawi,
+        tinteQemerDate,
+        medeb,
+        wenber,
+        abektie,
+        metqi,
+        bealeMetqiMonth,
+        bealeMetqiDay,
+        bealeMetqiDayOfWeek,
+        ninevehMonth,
+        mebajaHamer,
+        fastingDates,
+    };
+}
+
+function renderCalendar(values) {
+    updateResult("ameteAlem", formatNumber(values.ameteAlem));
+    updateResult("wengelawi", values.wengelawi);
+    window.firstDayOfYear = values.tinteQemerDate;
+    updateResult(
+        "tinteQemer",
+        `መስከረም ${formatNumber(1)} (${mapWeekDaysToAmharic(values.tinteQemerDate)})`
+    );
+    updateResult("medeb", formatNumber(values.medeb));
+    updateResult("wenber", formatNumber(values.wenber));
+    updateResult("abektie", formatNumber(values.abektie));
+    updateResult("metqi", formatNumber(values.metqi));
+    updateResult(
+        "bealeMetqi",
+        `${mapMonthToAmharic(values.bealeMetqiMonth)} ${formatNumber(
+            values.bealeMetqiDay
+        )} (${mapWeekDaysToAmharic(values.bealeMetqiDayOfWeek)})`
+    );
+    updateResult(
+        "mebajaHamer",
+        `${mapMonthToAmharic(values.ninevehMonth)} ${formatNumber(values.mebajaHamer)}`
+    );
+    displayFastingDates(values.fastingDates);
+}
+
+function calculateCalendar() {
+    const ethiopianYear = parseInt(document.getElementById("ethiopianYear").value);
+    const values = computeCalendarValues(ethiopianYear);
+    renderCalendar(values);
 }
 
 // የወሮቹን ስም ወደ አማርኛ ቀይር
