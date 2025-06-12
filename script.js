@@ -22,6 +22,13 @@ window.onload = function() {
     }
 };
 
+function updateResult(id, value) {
+    const el = document.getElementById(id);
+    if (el) {
+        el.textContent = value;
+    }
+}
+
 function calculateCurrentEthiopianYear() {
     const today = new Date(); // Get current date
     const gregorianYear = today.getFullYear(); // Current Gregorian year
@@ -50,13 +57,13 @@ function calculateCalendar() {
     // Step 1: Calculate Amete Alem
     const yearsBeforeChrist = 5500;
     const ameteAlem = yearsBeforeChrist + ethiopianYear;
-    document.getElementById('ameteAlem').innerText = formatNumber(ameteAlem);
+    updateResult('ameteAlem', formatNumber(ameteAlem));
 
     // Step 2: Calculate Evangelist (Wengelawi)
     const evangelists = ["ዮሐንስ", "ማቴዎስ", "ማርቆስ", "ሉቃስ"];
     const wengelawiIndex = ameteAlem % 4;
     const wengelawi = evangelists[wengelawiIndex];
-    document.getElementById('wengelawi').innerText = wengelawi;
+    updateResult('wengelawi', wengelawi);
 
     // Step 3: Calculate the correct day of New Year (Tinte Qemer)
     // ይህ አልሰራም፡፡
@@ -86,12 +93,12 @@ function calculateCalendar() {
     var tinteQemerDate = tinteQemerTable[tinteQemer]
     window.firstDayOfYear = tinteQemerDate;
 
-    document.getElementById('tinteQemer').innerText = `መስከረም ${formatNumber(1)} (${mapWeekDaysToAmharic(tinteQemerDate)})`;
+    updateResult('tinteQemer', `መስከረም ${formatNumber(1)} (${mapWeekDaysToAmharic(tinteQemerDate)})`);
 
-    document.getElementById('medeb').innerText   = formatNumber(medeb);
-    document.getElementById('wenber').innerText  = formatNumber(wenber);
-    document.getElementById('abektie').innerText = formatNumber(abektie);
-    document.getElementById('metqi').innerText   = formatNumber(metqi);
+    updateResult('medeb', formatNumber(medeb));
+    updateResult('wenber', formatNumber(wenber));
+    updateResult('abektie', formatNumber(abektie));
+    updateResult('metqi', formatNumber(metqi));
 
     // Step 5: Calculate Beale Metqi
     let bealeMetqiMonth, ninevehMonth, bealeMetqiDay;
@@ -116,7 +123,7 @@ function calculateCalendar() {
     // Shift Beale Metqi Day of the Week to the Previous Day
     //bealeMetqiDayOfWeek = shiftDayToPrevious(bealeMetqiDayOfWeek);
 
-    document.getElementById('bealeMetqi').innerText = `${mapMonthToAmharic(bealeMetqiMonth)} ${formatNumber(bealeMetqiDay)} (${mapWeekDaysToAmharic(bealeMetqiDayOfWeek)})`;
+    updateResult('bealeMetqi', `${mapMonthToAmharic(bealeMetqiMonth)} ${formatNumber(bealeMetqiDay)} (${mapWeekDaysToAmharic(bealeMetqiDayOfWeek)})`);
 
     // Step 7: Lookup the Tewsak for the adjusted day of the week
     const tewsakTable = {
@@ -137,7 +144,7 @@ function calculateCalendar() {
         mebajaHamer -= 30;  // Adjust if it exceeds 30 days
         ninevehMonth = "Yekatit"; // Move Nineveh to the next month
     }
-    document.getElementById('mebajaHamer').innerText = `${mapMonthToAmharic(ninevehMonth)} ${formatNumber(mebajaHamer)}`;
+    updateResult('mebajaHamer', `${mapMonthToAmharic(ninevehMonth)} ${formatNumber(mebajaHamer)}`);
 
     // Step 9: Calculate fasting and holy days based on Nineveh
     const fastingDates = calculateFastingDates(ninevehMonth, mebajaHamer);
