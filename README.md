@@ -73,7 +73,8 @@ Fasting and holy days are calculated based on the Mebaja Hamer date using predef
 
 1. Open the `index.html` file in a web browser.
 2. Enter the Ethiopian year in the input field.
-3. Click the "Calculate" button to display the calculated dates and observances.
+3. Choose your preferred numeral system (Arabic or Geez) from the dropdown.
+4. Click the "Calculate" button to display the calculated dates and observances.
 
 ## License
 
