@@ -3,14 +3,12 @@
 //Bahre Hasab
 
 window.onload = function() {
-    // Find current Ethiopian year
-    //const currentGregorianYear = new Date().getFullYear();
-    const currentEthiopianYear = calculateCurrentEthiopianYear();
-    //Read from the textbox
-    document.getElementById('ethiopianYear').value = currentEthiopianYear;
-    
+    const currentDate = getCurrentEthiopianDate();
+    document.getElementById('ethiopianYear').value = currentDate.year;
+
     // Trigger calculation on page load
     calculateCalendar();
+    generateEthiopianCalendar(currentDate.year, currentDate.month, currentDate.day);
 
     // Add event listener for the year change
     document.getElementById('ethiopianYear').addEventListener('change', calculateCalendar);
@@ -78,6 +76,7 @@ function calculateCalendar() {
         6:"Sunday",
     };
     var tinteQemerDate = tinteQemerTable[tinteQemer]
+    window.firstDayOfYear = tinteQemerDate;
 
     document.getElementById('tinteQemer').innerText = `መስከረም 1 (${mapWeekDaysToAmharic(tinteQemerDate)})`;
 
@@ -416,4 +415,80 @@ function displayFastingDates(fastingDates) {
         row.appendChild(dateCell);
         fastingTable.appendChild(row);
     });
+}
+
+function getCurrentEthiopianDate() {
+    const today = new Date();
+    let year = calculateCurrentEthiopianYear();
+
+    let isLeap = ((year + 1) % 4 === 0);
+    let gYear = year + 7;
+    let newYear = new Date(gYear, 8, isLeap ? 12 : 11);
+    if (today < newYear) {
+        year -= 1;
+        isLeap = ((year + 1) % 4 === 0);
+        gYear = year + 7;
+        newYear = new Date(gYear, 8, isLeap ? 12 : 11);
+    }
+
+    let diff = Math.floor((today - newYear) / (1000 * 60 * 60 * 24));
+    const months = ["Meskerem", "Tikimt", "Hidar", "Tahisas", "Tirr", "Yekatit", "Megabit", "Miazia", "Ginbot", "Sene", "Hamle", "Nehase", "Pagumen"];
+    const monthLengths = [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, isLeap ? 6 : 5];
+    let monthIndex = 0;
+    while (diff >= monthLengths[monthIndex]) {
+        diff -= monthLengths[monthIndex];
+        monthIndex++;
+    }
+    const month = months[monthIndex];
+    const day = diff + 1;
+    return { year, month, day };
+}
+
+function generateEthiopianCalendar(year, month, day) {
+    const container = document.getElementById('ethiopian-calendar');
+    container.innerHTML = `<h4>${mapMonthToAmharic(month)} ${year}</h4>`;
+
+    const table = document.createElement('table');
+    table.className = 'table table-bordered';
+
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    weekdays.forEach(w => {
+        const th = document.createElement('th');
+        th.innerText = mapWeekDaysToAmharic(w);
+        headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    const daysInMonth = month === 'Pagumen' ? ((year + 1) % 4 === 0 ? 6 : 5) : 30;
+    const firstDay = getEthiopianDayOfWeek(window.firstDayOfYear, `${month} 1`);
+    const dayIndex = {"Sunday":0,"Monday":1,"Tuesday":2,"Wednesday":3,"Thursday":4,"Friday":5,"Saturday":6};
+
+    let row = document.createElement('tr');
+    for (let i = 0; i < dayIndex[firstDay]; i++) {
+        row.appendChild(document.createElement('td'));
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+        if (row.children.length === 7) {
+            tbody.appendChild(row);
+            row = document.createElement('tr');
+        }
+        const cell = document.createElement('td');
+        cell.innerText = d;
+        if (d === day) {
+            cell.classList.add('current-day');
+        }
+        row.appendChild(cell);
+    }
+
+    while (row.children.length && row.children.length < 7) {
+        row.appendChild(document.createElement('td'));
+    }
+    tbody.appendChild(row);
+    table.appendChild(tbody);
+    container.appendChild(table);
 }
