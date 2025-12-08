@@ -8,12 +8,42 @@ window.onload = function() {
     const currentEthiopianYear = calculateCurrentEthiopianYear();
     //Read from the textbox
     document.getElementById('ethiopianYear').value = currentEthiopianYear;
-    
+
+    // Show current Ethiopian year and today's Gregorian date
+    const currentEthYearDisplay = document.getElementById('currentEthiopianYearDisplay');
+    const currentGregDateDisplay = document.getElementById('currentGregorianDateDisplay');
+    if (currentEthYearDisplay) {
+        currentEthYearDisplay.innerText = formatNumber(currentEthiopianYear);
+    }
+    if (currentGregDateDisplay) {
+        const today = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        currentGregDateDisplay.innerText = today.toLocaleDateString(undefined, options);
+    }
+
     // Trigger calculation on page load
     calculateCalendar();
 
     // Add event listener for the year change
     document.getElementById('ethiopianYear').addEventListener('change', calculateCalendar);
+
+    // Recalculate when numeral system changes
+    const numeralRadios = document.querySelectorAll('input[name="numeralSystem"]');
+    numeralRadios.forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            // Update current Ethiopian year display with new numeral system
+            if (currentEthYearDisplay) {
+                const yearNow = calculateCurrentEthiopianYear();
+                currentEthYearDisplay.innerText = formatNumber(yearNow);
+            }
+            // Re-run calculations so all results switch numerals
+            calculateCalendar();
+        });
+    });
+
+    // Build current Ethiopian month calendar on load
+    const currentEthDate = getCurrentEthiopianDate();
+    generateEthiopianCalendar(currentEthDate.year, currentEthDate.month, currentEthDate.day);
 };
 
 function calculateCurrentEthiopianYear() {
@@ -38,13 +68,181 @@ function calculateCurrentEthiopianYear() {
     }
 }
 
+function getSelectedNumeralSystem() {
+    const selected = document.querySelector('input[name="numeralSystem"]:checked');
+    return selected ? selected.value : 'arabic';
+}
+
+function toGeezNumerals(value) {
+    // Simple per-digit mapping to Ethiopic numerals (፩-፱). 0 stays as Latin 0.
+    const map = {
+        '0': '0',
+        '1': '፩',
+        '2': '፪',
+        '3': '፫',
+        '4': '፬',
+        '5': '፭',
+        '6': '፮',
+        '7': '፯',
+        '8': '፰',
+        '9': '፱'
+    };
+    return String(value).split('').map(function (ch) {
+        return Object.prototype.hasOwnProperty.call(map, ch) ? map[ch] : ch;
+    }).join('');
+}
+
+function formatNumber(value) {
+    const system = getSelectedNumeralSystem();
+    if (system === 'geez') {
+        return toGeezNumerals(value);
+    }
+    return String(value);
+}
+
+function getCurrentEthiopianDate() {
+    const today = new Date();
+    let year = calculateCurrentEthiopianYear();
+
+    let isLeap = ((year + 1) % 4 === 0);
+    let gYear = year + 7;
+    let newYear = new Date(gYear, 8, isLeap ? 12 : 11);
+    if (today < newYear) {
+        year -= 1;
+        isLeap = ((year + 1) % 4 === 0);
+        gYear = year + 7;
+        newYear = new Date(gYear, 8, isLeap ? 12 : 11);
+    }
+
+    let diff = Math.floor((today - newYear) / (1000 * 60 * 60 * 24));
+    const months = ["Meskerem", "Tikimt", "Hidar", "Tahisas", "Tirr", "Yekatit", "Megabit", "Miazia", "Ginbot", "Sene", "Hamle", "Nehase", "Pagumen"];
+    const monthLengths = [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, isLeap ? 6 : 5];
+    let monthIndex = 0;
+    while (diff >= monthLengths[monthIndex]) {
+        diff -= monthLengths[monthIndex];
+        monthIndex++;
+    }
+    const month = months[monthIndex];
+    const day = diff + 1;
+    return { year, month, day };
+}
+
+function ethiopianToGregorianDate(year, month, day) {
+    // Compute Gregorian date corresponding to a given Ethiopian date in the same style as getCurrentEthiopianDate
+    let isLeap = ((year + 1) % 4 === 0);
+    let gYear = year + 7;
+    let newYear = new Date(gYear, 8, isLeap ? 12 : 11);
+
+    const months = ["Meskerem", "Tikimt", "Hidar", "Tahisas", "Tirr", "Yekatit", "Megabit", "Miazia", "Ginbot", "Sene", "Hamle", "Nehase", "Pagumen"];
+    const monthLengths = [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, isLeap ? 6 : 5];
+
+    let offset = 0;
+    for (let i = 0; i < months.length; i++) {
+        if (months[i] === month) {
+            break;
+        }
+        offset += monthLengths[i];
+    }
+    offset += (day - 1);
+
+    const result = new Date(newYear.getTime());
+    result.setDate(result.getDate() + offset);
+    return result;
+}
+
+function generateEthiopianCalendar(year, month, currentDay) {
+    const container = document.getElementById('ethiopian-calendar');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    const header = document.createElement('div');
+    header.className = 'calendar-eth-header';
+    const title = document.createElement('div');
+    title.className = 'calendar-eth-title';
+    title.innerText = `${mapMonthToAmharic(month)} ${formatNumber(year)}`;
+    const sub = document.createElement('div');
+    sub.className = 'calendar-eth-subtitle';
+    sub.innerText = '';
+    header.appendChild(title);
+    header.appendChild(sub);
+    container.appendChild(header);
+
+    const table = document.createElement('table');
+    table.className = 'table table-bordered calendar-eth-table';
+
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    weekdays.forEach(w => {
+        const th = document.createElement('th');
+        th.innerText = mapWeekDaysToAmharic(w);
+        headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    const daysInMonth = month === 'Pagumen' ? ((year + 1) % 4 === 0 ? 6 : 5) : 30;
+
+    const firstGregDate = ethiopianToGregorianDate(year, month, 1);
+    const firstWeekdayIndex = firstGregDate.getDay(); // 0=Sunday
+
+    let row = document.createElement('tr');
+    for (let i = 0; i < firstWeekdayIndex; i++) {
+        row.appendChild(document.createElement('td'));
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+        if (row.children.length === 7) {
+            tbody.appendChild(row);
+            row = document.createElement('tr');
+        }
+        const cell = document.createElement('td');
+
+        const ethSpan = document.createElement('span');
+        ethSpan.className = 'calendar-eth-day-eth';
+        ethSpan.innerText = formatNumber(d);
+
+        const gregSpan = document.createElement('span');
+        gregSpan.className = 'calendar-eth-day-greg';
+        const gregDate = ethiopianToGregorianDate(year, month, d);
+        gregSpan.innerText = gregDate.getDate();
+
+        if (d === currentDay) {
+            cell.classList.add('calendar-eth-current-day');
+        }
+
+        cell.appendChild(ethSpan);
+        cell.appendChild(gregSpan);
+        row.appendChild(cell);
+    }
+
+    while (row.children.length && row.children.length < 7) {
+        row.appendChild(document.createElement('td'));
+    }
+    tbody.appendChild(row);
+    table.appendChild(tbody);
+    container.appendChild(table);
+}
+
 function calculateCalendar() {
     const ethiopianYear = parseInt(document.getElementById('ethiopianYear').value);
+    const resultTableBody = document.getElementById('resultTable');
+    const fastingTableBody = document.getElementById('fastingTable');
+
+    [resultTableBody, fastingTableBody].forEach(function (el) {
+        if (!el) return;
+        el.classList.remove('fade-in-soft');
+        // Force reflow so the animation can restart
+        void el.offsetWidth;
+        el.classList.add('fade-in-soft');
+    });
     
     // Step 1: Calculate Amete Alem
     const yearsBeforeChrist = 5500;
     const ameteAlem = yearsBeforeChrist + ethiopianYear;
-    document.getElementById('ameteAlem').innerText = ameteAlem;
+    document.getElementById('ameteAlem').innerText = formatNumber(ameteAlem);
 
     // Step 2: Calculate Evangelist (Wengelawi)
     const evangelists = ["ዮሐንስ", "ማቴዎስ", "ማርቆስ", "ሉቃስ"];
@@ -79,12 +277,13 @@ function calculateCalendar() {
     };
     var tinteQemerDate = tinteQemerTable[tinteQemer]
 
-    document.getElementById('tinteQemer').innerText = `መስከረም 1 (${mapWeekDaysToAmharic(tinteQemerDate)})`;
+    const newYearDayLabel = formatNumber(1);
+    document.getElementById('tinteQemer').innerText = `መስከረም ${newYearDayLabel} (${mapWeekDaysToAmharic(tinteQemerDate)})`;
 
-    document.getElementById('medeb').innerText   = medeb;
-    document.getElementById('wenber').innerText  = wenber;
-    document.getElementById('abektie').innerText = abektie;
-    document.getElementById('metqi').innerText   = metqi;
+    document.getElementById('medeb').innerText   = formatNumber(medeb);
+    document.getElementById('wenber').innerText  = formatNumber(wenber);
+    document.getElementById('abektie').innerText = formatNumber(abektie);
+    document.getElementById('metqi').innerText   = formatNumber(metqi);
 
     // Step 5: Calculate Beale Metqi
     let bealeMetqiMonth, ninevehMonth, bealeMetqiDay;
@@ -109,7 +308,8 @@ function calculateCalendar() {
     // Shift Beale Metqi Day of the Week to the Previous Day
     //bealeMetqiDayOfWeek = shiftDayToPrevious(bealeMetqiDayOfWeek);
 
-    document.getElementById('bealeMetqi').innerText = `${mapMonthToAmharic(bealeMetqiMonth)} ${bealeMetqiDay} (${mapWeekDaysToAmharic(bealeMetqiDayOfWeek)})`;
+    const bealeMetqiDayLabel = formatNumber(bealeMetqiDay);
+    document.getElementById('bealeMetqi').innerText = `${mapMonthToAmharic(bealeMetqiMonth)} ${bealeMetqiDayLabel} (${mapWeekDaysToAmharic(bealeMetqiDayOfWeek)})`;
 
     // Step 7: Lookup the Tewsak for the adjusted day of the week
     const tewsakTable = {
@@ -130,7 +330,8 @@ function calculateCalendar() {
         mebajaHamer -= 30;  // Adjust if it exceeds 30 days
         ninevehMonth = "Yekatit"; // Move Nineveh to the next month
     }
-    document.getElementById('mebajaHamer').innerText = `${mapMonthToAmharic(ninevehMonth)} ${mebajaHamer}`;
+    const mebajaHamerLabel = formatNumber(mebajaHamer);
+    document.getElementById('mebajaHamer').innerText = `${mapMonthToAmharic(ninevehMonth)} ${mebajaHamerLabel}`;
 
     // Step 9: Calculate fasting and holy days based on Nineveh
     const fastingDates = calculateFastingDates(ninevehMonth, mebajaHamer);
@@ -411,7 +612,8 @@ function displayFastingDates(fastingDates) {
         const nameCell = document.createElement('td');
         nameCell.innerText = day.name;
         const dateCell = document.createElement('td');
-        dateCell.innerText = `${day.month} ${day.day}`;
+        const formattedDay = formatNumber(day.day);
+        dateCell.innerText = `${day.month} ${formattedDay}`;
         row.appendChild(nameCell);
         row.appendChild(dateCell);
         fastingTable.appendChild(row);

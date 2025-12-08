@@ -8,112 +8,288 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Font for Amharic & Latin (sans-serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         body {
-            background-color: #f5f5f5;
+            background-color: #f4f5f0;
+            font-family: 'Noto Sans Ethiopic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #1f2933;
         }
         .content-wrapper {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            max-width: 1000px;
-            margin: 20px auto;
+            background-color: #fffaf2;
+            padding: 32px 24px;
+            border-radius: 16px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+            max-width: 1100px;
+            margin: 32px auto;
+            border-top: 4px solid #d4a017;
+        }
+        .app-header {
+            margin-bottom: 24px;
+        }
+        .app-title {
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+        .app-subtitle {
+            font-size: 0.95rem;
+            color: #6b7280;
+        }
+        .header-divider {
+            height: 1px;
+            background: linear-gradient(to right, rgba(212, 160, 23, 0.9), transparent);
+            margin-top: 16px;
+        }
+        .section-card {
+            background-color: #ffffff;
+            border-radius: 14px;
+            border: 1px solid rgba(15, 23, 42, 0.05);
+            padding: 20px 18px;
+            margin-bottom: 24px;
+        }
+        .numeral-toggle-label {
+            font-size: 0.85rem;
+            color: #4b5563;
+            font-weight: 500;
+        }
+        .numeral-toggle-option {
+            font-size: 0.85rem;
+            margin-left: 4px;
+            margin-right: 12px;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #14532d;
+            margin-bottom: 12px;
         }
         .form-label {
-            font-weight: bold;
+            font-weight: 600;
+        }
+        .form-text {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+        .form-control {
+            border-radius: 10px;
+            border-color: #cbd5e1;
+        }
+        .form-control:focus {
+            border-color: #14532d;
+            box-shadow: 0 0 0 0.15rem rgba(20, 83, 45, 0.25);
+        }
+        .btn-primary {
+            background-color: #14532d;
+            border-color: #14532d;
+            border-radius: 999px;
+            padding-inline: 24px;
+            font-weight: 600;
+        }
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: #0f3b21;
+            border-color: #0f3b21;
         }
         table {
-            margin-top: 20px;
+            margin-top: 12px;
             width: 100%;
         }
         th, td {
-            padding: 15px;
+            padding: 12px 14px;
             text-align: left;
+            vertical-align: middle;
+        }
+        .table thead.table-dark {
+            background-color: #14532d;
+        }
+        .table thead.table-dark th {
+            border-color: #0f3b21;
         }
         .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: rgba(20, 83, 45, 0.03);
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(20, 83, 45, 0.06);
+        }
+        .calendar-eth-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+        .calendar-eth-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #14532d;
+        }
+        .calendar-eth-subtitle {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        .calendar-eth-table th,
+        .calendar-eth-table td {
+            text-align: center;
+            font-size: 0.8rem;
+            padding: 6px 4px;
+        }
+        .calendar-eth-day-eth {
+            display: block;
+            font-weight: 600;
+        }
+        .calendar-eth-day-greg {
+            display: block;
+            font-size: 0.7rem;
+            color: #6b7280;
+        }
+        .calendar-eth-current-day {
+            background-color: rgba(20, 83, 45, 0.12);
+            border-radius: 6px;
+            font-weight: 700;
+            color: #b91c1c;
+        }
+        .fade-in-soft {
+            animation: fadeInUpSoft 420ms ease-out;
+        }
+        @keyframes fadeInUpSoft {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @media (max-width: 576px) {
+            .content-wrapper {
+                padding: 24px 16px;
+                margin: 16px;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="content-wrapper">
-    <div class="container text-center">
-        <h2 class="mb-4">ባሕረ ሐሳብ</h2>
+    <div class="container">
+        <div class="app-header text-center">
+            <h2 class="mb-2 app-title">ባሕረ ሐሳብ</h2>
+            <p class="app-subtitle mb-0">የቤተ ክርስቲያን በዓላትንና አጽዋማትን በኢትዮጵያዊ አቆጣጠር ለማግኘት የሚረዳ መሣሪያ</p>
+            <div class="header-divider"></div>
+        </div>
 
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <label for="ethiopianYear" class="form-label">አመተ ምሕረት(በኢትዮጵያ አቆጣጠር) ያስገቡ:</label>
-                <input type="number" id="ethiopianYear" class="form-control mb-3" />
-            </div>
-            <div class="col-md-6 d-flex align-items-end">
-                <button class="btn btn-primary" onclick="calculateCalendar()">Calculate</button>
+        <div class="section-card mb-3">
+            <h3 class="section-title mb-2">ዛሬ ቀን</h3>
+            <div class="row g-2 small">
+                <div class="col-md-6">
+                    <div><strong>ኢትዮጵያዊ ዓመት፡</strong> <span id="currentEthiopianYearDisplay"></span></div>
+                </div>
+                <div class="col-md-6">
+                    <div><strong>ዛሬ በፈረንጅ ቀን፡</strong> <span id="currentGregorianDateDisplay"></span></div>
+                </div>
             </div>
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover mt-4">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ስሌት</th>
-                       <th>ውጤት</th>
-                    </tr>
-                </thead>
-                <tbody id="resultTable">
-                    <tr>
-                        <td>ዓመተ አለም</td>
-                        <td id="ameteAlem"></td>
-                    </tr>
-                    <tr>
-                        <td>ወንጌላዊ</td>
-                        <td id="wengelawi"></td>
-                    </tr>
-                    <tr>
-                        <td>እንቁጣጣሽ</td>
-                        <td id="tinteQemer"></td>
-                    </tr>
-                    <tr>
-                        <td>መደብ</td>
-                        <td id="medeb"></td>
-                    </tr>
-                    <tr>
-                        <td>ወንበር</td>
-                        <td id="wenber"></td>
-                    </tr>
-                    <tr>
-                        <td>አበቅቴ</td>
-                        <td id="abektie"></td>
-                    </tr>
-                    <tr>
-                        <td>መጥቅእ</td>
-                        <td id="metqi"></td>
-                    </tr>
-                    <tr>
-                        <td>በዓለ መጥቅእ</td>
-                        <td id="bealeMetqi"></td>
-                    </tr>
-                    <tr>
-                        <td>መባጃ ሐመር(ነነዌ)</td>
-                        <td id="mebajaHamer"></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="section-card">
+            <div class="row align-items-end g-3">
+                <div class="col-md-7">
+                    <label for="ethiopianYear" class="form-label">አመተ ምሕረት (በኢትዮጵያ አቆጣጠር) ያስገቡ</label>
+                    <input type="number" id="ethiopianYear" class="form-control mb-1" />
+                    <div class="form-text">ምሳሌ፡ 2016፣ 2017፣ 2018…</div>
+                </div>
+                <div class="col-md-5 text-md-end">
+                    <div class="mb-2 text-md-end text-start">
+                        <span class="numeral-toggle-label me-2">የቁጥር አቆጣጠር፡</span>
+                        <label class="numeral-toggle-option">
+                            <input type="radio" name="numeralSystem" value="arabic" checked> 1 2 3
+                        </label>
+                        <label class="numeral-toggle-option">
+                            <input type="radio" name="numeralSystem" value="geez"> ፩ ፪ ፫
+                        </label>
+                    </div>
+                    <button class="btn btn-primary btn-lg mt-1" onclick="calculateCalendar()">ስሌቱን አስላ</button>
+                </div>
+            </div>
+
+            <div class="table-responsive mt-4">
+                <h3 class="section-title">የዓመት ስሌት</h3>
+                <table class="table table-bordered table-striped table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ስሌት</th>
+                            <th>ውጤት</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultTable">
+                        <tr>
+                            <td>ዓመተ አለም</td>
+                            <td id="ameteAlem"></td>
+                        </tr>
+                        <tr>
+                            <td>ወንጌላዊ</td>
+                            <td id="wengelawi"></td>
+                        </tr>
+                        <tr>
+                            <td>እንቁጣጣሽ</td>
+                            <td id="tinteQemer"></td>
+                        </tr>
+                        <tr>
+                            <td>መደብ</td>
+                            <td id="medeb"></td>
+                        </tr>
+                        <tr>
+                            <td>ወንበር</td>
+                            <td id="wenber"></td>
+                        </tr>
+                        <tr>
+                            <td>አበቅቴ</td>
+                            <td id="abektie"></td>
+                        </tr>
+                        <tr>
+                            <td>መጥቅእ</td>
+                            <td id="metqi"></td>
+                        </tr>
+                        <tr>
+                            <td>በዓለ መጥቅእ</td>
+                            <td id="bealeMetqi"></td>
+                        </tr>
+                        <tr>
+                            <td>መባጃ ሐመር (ነነዌ)</td>
+                            <td id="mebajaHamer"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <h3 class="mt-5">አጽዋማት እና በዓላት</h3>
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>አጽዋማት/በዓላት</th>
-                        <th>ቀን</th>
+        <div class="section-card mt-3">
+            <div class="calendar-eth-header">
+                <div class="calendar-eth-title">ወርሃዊ ቀን መቁጠሪያ</div>
+                <div class="calendar-eth-subtitle">በኢትዮጵያዊ ወር መሠረት፣ በእያንዳንዱ ክፍል ውስጥ ኢትዮጵያዊ እና ፈረንጅ ቀን</div>
+            </div>
+            <div id="ethiopian-calendar"></div>
+        </div>
+
+        <div class="section-card mt-3">
+            <h3 class="section-title">አጽዋማት እና በዓላት</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>አጽዋማት/በዓላት</th>
+                            <th>ቀን</th>
+                        </tr>
                     </tr>
-                </thead>
-                <tbody id="fastingTable">
-                    <!-- Fasting days will be dynamically inserted here -->
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody id="fastingTable">
+                        <!-- Fasting days will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
