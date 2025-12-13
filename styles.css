@@ -1,0 +1,273 @@
+body {
+    background-color: #f4f5f0;
+    font-family: 'Noto Sans Ethiopic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #1f2933;
+}
+
+/* Layout shell */
+.hero-section {
+    background: radial-gradient(circle at top left, rgba(212, 160, 23, 0.12), transparent 55%),
+                radial-gradient(circle at bottom right, rgba(20, 83, 45, 0.18), transparent 55%),
+                #fffaf2;
+    padding-top: 6rem;
+    padding-bottom: 4rem;
+}
+
+.hero-section .badge {
+    background-color: rgba(20, 83, 45, 0.08);
+    color: #14532d;
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.hero-title {
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.hero-subtitle {
+    font-size: 0.98rem;
+    color: #4b5563;
+}
+
+.hero-cta .btn-primary {
+    padding-inline: 1.75rem;
+    border-radius: 999px;
+}
+
+.main-shell {
+    margin-top: -2.5rem;
+}
+
+.section-card {
+    background-color: #ffffff;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.05);
+    padding: 20px 18px;
+    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.12);
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #14532d;
+    margin-bottom: 12px;
+}
+
+.app-footer {
+    background-color: #f9fafb;
+    border-top: 1px solid rgba(15, 23, 42, 0.06);
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.app-footer a {
+    color: #14532d;
+    text-decoration: none;
+}
+
+.app-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Existing form and table styling */
+.form-label {
+    font-weight: 600;
+}
+
+.form-text {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.form-control {
+    border-radius: 10px;
+    border-color: #cbd5e1;
+}
+
+.form-control:focus {
+    border-color: #14532d;
+    box-shadow: 0 0 0 0.15rem rgba(20, 83, 45, 0.25);
+}
+
+.btn-primary {
+    background-color: #14532d;
+    border-color: #14532d;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: #0f3b21;
+    border-color: #0f3b21;
+}
+
+.numeral-toggle-label {
+    font-size: 0.85rem;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+.numeral-toggle-option {
+    font-size: 0.85rem;
+    margin-left: 4px;
+    margin-right: 12px;
+}
+
+table {
+    margin-top: 12px;
+    width: 100%;
+}
+
+th,
+td {
+    padding: 12px 14px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.table thead.table-dark {
+    background-color: #14532d;
+}
+
+.table thead.table-dark th {
+    border-color: #0f3b21;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(20, 83, 45, 0.03);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(20, 83, 45, 0.06);
+}
+
+/* Calendar styles */
+.calendar-eth-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+
+.calendar-eth-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #14532d;
+}
+
+.calendar-eth-subtitle {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.calendar-eth-table th,
+.calendar-eth-table td {
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 6px 4px;
+}
+
+.calendar-eth-day-eth {
+    display: block;
+    font-weight: 600;
+}
+
+.calendar-eth-day-greg {
+    display: block;
+    font-size: 0.7rem;
+    color: #6b7280;
+}
+
+.calendar-eth-current-day {
+    background-color: rgba(20, 83, 45, 0.12);
+    border-radius: 8px;
+    color: #b91c1c;
+}
+
+.calendar-eth-current-day .calendar-eth-day-eth,
+.calendar-eth-current-day .calendar-eth-day-greg {
+    font-weight: 700;
+}
+
+.calendar-eth-current-day .calendar-eth-day-eth {
+    font-size: 1.05rem;
+}
+
+.calendar-eth-current-day .calendar-eth-day-greg {
+    font-size: 0.8rem;
+}
+
+/* Fasting & feasts list */
+.fasting-list {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+    column-gap: 1.4rem;
+}
+
+.fasting-item {
+    padding: 0.6rem 0.75rem;
+    border-radius: 10px;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    background-color: #f9fafb;
+    flex: 0 0 100%;
+}
+
+.fasting-item-name {
+    font-size: 0.95rem;
+}
+
+.fasting-item-date {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.fasting-date-pill {
+    display: inline-block;
+    padding: 0.15rem 0.7rem;
+    border-radius: 999px;
+    background-color: #14532d;
+    color: #f9fafb;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+@media (min-width: 768px) {
+    .fasting-item {
+        /* narrower than one-third so columns have more breathing room */
+        flex: 0 0 calc(28% - 0.35rem);
+    }
+}
+
+/* Soft fade-in animation for tables */
+.fade-in-soft {
+    animation: fadeInUpSoft 420ms ease-out;
+}
+
+@keyframes fadeInUpSoft {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+    .hero-section {
+        padding-top: 5rem;
+        padding-bottom: 3rem;
+    }
+
+    .section-card {
+        padding: 16px 14px;
+    }
+}

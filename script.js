@@ -607,15 +607,26 @@ function addDaysToEthiopianDate(startMonth, startDay, daysToAdd) {
 function displayFastingDates(fastingDates) {
     const fastingTable = document.getElementById('fastingTable');
     fastingTable.innerHTML = '';  // Clear previous results
+
     fastingDates.forEach(day => {
-        const row = document.createElement('tr');
-        const nameCell = document.createElement('td');
-        nameCell.innerText = day.name;
-        const dateCell = document.createElement('td');
+        const item = document.createElement('div');
+        item.className = 'fasting-item row align-items-center';
+
+        const nameCol = document.createElement('div');
+        nameCol.className = 'col-7 col-md-8 fasting-item-name';
+        nameCol.innerText = day.name;
+
+        const dateCol = document.createElement('div');
+        dateCol.className = 'col-5 col-md-4 text-end fasting-item-date';
         const formattedDay = formatNumber(day.day);
-        dateCell.innerText = `${day.month} ${formattedDay}`;
-        row.appendChild(nameCell);
-        row.appendChild(dateCell);
-        fastingTable.appendChild(row);
+        const pill = document.createElement('span');
+        pill.className = 'fasting-date-pill';
+        pill.innerText = `${day.month} ${formattedDay}`;
+
+        dateCol.appendChild(pill);
+        item.appendChild(nameCol);
+        item.appendChild(dateCol);
+
+        fastingTable.appendChild(item);
     });
 }
