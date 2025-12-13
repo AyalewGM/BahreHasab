@@ -38,6 +38,10 @@ window.onload = function() {
             }
             // Re-run calculations so all results switch numerals
             calculateCalendar();
+
+            // Regenerate the Ethiopian calendar so its days reflect the new numeral system
+            const currentEthDate = getCurrentEthiopianDate();
+            generateEthiopianCalendar(currentEthDate.year, currentEthDate.month, currentEthDate.day);
         });
     });
 
@@ -75,7 +79,7 @@ function getSelectedNumeralSystem() {
 
 function toGeezNumerals(value) {
     // Simple per-digit mapping to Ethiopic numerals (፩-፱). 0 stays as Latin 0.
-    const map = {
+    const digitMap = {
         '0': '0',
         '1': '፩',
         '2': '፪',
@@ -87,8 +91,72 @@ function toGeezNumerals(value) {
         '8': '፰',
         '9': '፱'
     };
+
+    // Prefer proper Ethiopic tens for numbers from 1–99 (፩–፱, ፲–፺, ፳፩ … ፺፱)
+    const num = Number(value);
+    if (Number.isFinite(num) && num >= 1) {
+        const unitsMap = {
+            1: '፩',
+            2: '፪',
+            3: '፫',
+            4: '፬',
+            5: '፭',
+            6: '፮',
+            7: '፯',
+            8: '፰',
+            9: '፱'
+        };
+        const tensMap = {
+            10: '፲',
+            20: '፳',
+            30: '፴',
+            40: '፵',
+            50: '፶',
+            60: '፷',
+            70: '፸',
+            80: '፹',
+            90: '፺'
+        };
+
+        function twoDigitToGeez(n) {
+            if (n === 0) return '';
+            if (n <= 9) return unitsMap[n] || '';
+            const tens = Math.floor(n / 10) * 10;
+            const unit = n % 10;
+            const tensChar = tensMap[tens];
+            if (!tensChar) return '';
+            if (unit === 0) return tensChar;
+            return tensChar + (unitsMap[unit] || '');
+        }
+
+        // 1–99: use pure tens/units mapping
+        if (num < 100) {
+            return twoDigitToGeez(num) || String(value);
+        }
+
+        // 100–9999: treat as h*100 + r where 1<=h<=99, 0<=r<100
+        // Example: 2016 = 20*100 + 16 → ፳፻፲፮, 2030 = 20*100 + 30 → ፳፻፴
+        if (num >= 100 && num < 10000) {
+            const hundredsFactor = Math.floor(num / 100); // h
+            const remainder = num % 100;                  // r
+
+            const head = twoDigitToGeez(hundredsFactor);
+            const tail = twoDigitToGeez(remainder);
+
+            if (!head) {
+                // Fallback if we somehow cannot represent the hundreds factor
+                return String(value).split('')
+                    .map(function (ch) { return Object.prototype.hasOwnProperty.call(digitMap, ch) ? digitMap[ch] : ch; })
+                    .join('');
+            }
+
+            return tail ? head + '፻' + tail : head + '፻';
+        }
+    }
+
+    // Fallback: map each digit independently (used for values outside handled ranges)
     return String(value).split('').map(function (ch) {
-        return Object.prototype.hasOwnProperty.call(map, ch) ? map[ch] : ch;
+        return Object.prototype.hasOwnProperty.call(digitMap, ch) ? digitMap[ch] : ch;
     }).join('');
 }
 
