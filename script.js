@@ -29,7 +29,7 @@ window.onload = function() {
         const gregForEth = ethiopianToGregorianDate(d.year, d.month, d.day);
         const weekdayEn = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][gregForEth.getDay()];
         const weekdayAm = mapWeekDaysToAmharic(weekdayEn);
-        currentEthFullDateDisplay.innerText = `${ethMonthName} ${ethDay} ${ethYear} (${weekdayAm})`;
+        currentEthFullDateDisplay.innerText = `${weekdayAm} - ${ethMonthName} ${ethDay} ${ethYear}`;
     }
 
     // Trigger calculation on page load
@@ -56,7 +56,7 @@ window.onload = function() {
                 const gregForEth = ethiopianToGregorianDate(d.year, d.month, d.day);
                 const weekdayEn = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][gregForEth.getDay()];
                 const weekdayAm = mapWeekDaysToAmharic(weekdayEn);
-                currentEthFullDateDisplay.innerText = `${ethMonthName} ${ethDay} ${ethYear} (${weekdayAm})`;
+                currentEthFullDateDisplay.innerText = `${weekdayAm} - ${ethMonthName} ${ethDay} ${ethYear}`;
             }
             // Re-run calculations so all results switch numerals
             calculateCalendar();
