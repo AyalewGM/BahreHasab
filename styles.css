@@ -57,6 +57,17 @@ body {
     margin-bottom: 12px;
 }
 
+.highlight-today {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #b91c1c;
+}
+
+.highlight-amete {
+    font-weight: 700;
+    color: #b91c1c;
+}
+
 .app-footer {
     background-color: #f9fafb;
     border-top: 1px solid rgba(15, 23, 42, 0.06);
