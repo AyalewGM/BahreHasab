@@ -66,20 +66,8 @@
     <main class="py-4 main-shell">
         <div class="container">
             <div class="row g-4">
-                <!-- Left column: Today + Calculator -->
+                <!-- Left column: Calculator -->
                 <div class="col-lg-6 d-flex flex-column gap-3" id="calculator">
-                    <div class="section-card">
-                        <h3 class="section-title mb-2">ዛሬ ቀን</h3>
-                        <div class="row g-2 small">
-                            <div class="col-sm-6">
-                                <div><strong>ኢትዮጵያ ዓመት፡</strong> <span id="currentEthiopianYearDisplay"></span></div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div><strong>ዛሬ ቀን እንደ አውሮፓውያን አቆጣጠር፡</strong> <span id="currentGregorianDateDisplay"></span></div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="section-card">
                         <div class="row align-items-end g-3">
                             <div class="col-md-7">
@@ -153,8 +141,26 @@
                     </div>
                 </div>
 
-                <!-- Right column: Calendar -->
-                <div class="col-lg-6">
+                <!-- Right column: Today + Calendar -->
+                <div class="col-lg-6 d-flex flex-column gap-3">
+                    <div class="section-card">
+                        <h3 class="section-title mb-2 text-center">ዛሬ ቀን</h3>
+                        <div class="row g-2 small align-items-center">
+                            <div class="col-12 col-md-6">
+                                <div>
+                                    <strong>በኢትዮጵያ  አቆጣጠር፡</strong>
+                                    <span id="currentEthiopianFullDate"></span>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 text-md-end">
+                                <div>
+                                    <strong>እንደ አውሮፓውያን አቆጣጠር፡</strong>
+                                    <span id="currentGregorianDateDisplay"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="section-card h-100">
                         <div class="calendar-eth-header">
                             <div class="calendar-eth-title">ወርሃዊ ቀን መቁጠሪያ</div>

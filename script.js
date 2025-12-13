@@ -12,6 +12,7 @@ window.onload = function() {
     // Show current Ethiopian year and today's Gregorian date
     const currentEthYearDisplay = document.getElementById('currentEthiopianYearDisplay');
     const currentGregDateDisplay = document.getElementById('currentGregorianDateDisplay');
+    const currentEthFullDateDisplay = document.getElementById('currentEthiopianFullDate');
     if (currentEthYearDisplay) {
         currentEthYearDisplay.innerText = formatNumber(currentEthiopianYear);
     }
@@ -19,6 +20,16 @@ window.onload = function() {
         const today = new Date();
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         currentGregDateDisplay.innerText = today.toLocaleDateString(undefined, options);
+    }
+    if (currentEthFullDateDisplay) {
+        const d = getCurrentEthiopianDate();
+        const ethMonthName = mapMonthToAmharic(d.month);
+        const ethDay = formatNumber(d.day);
+        const ethYear = formatNumber(d.year);
+        const gregForEth = ethiopianToGregorianDate(d.year, d.month, d.day);
+        const weekdayEn = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][gregForEth.getDay()];
+        const weekdayAm = mapWeekDaysToAmharic(weekdayEn);
+        currentEthFullDateDisplay.innerText = `${ethMonthName} ${ethDay} ${ethYear} (${weekdayAm})`;
     }
 
     // Trigger calculation on page load
@@ -35,6 +46,17 @@ window.onload = function() {
             if (currentEthYearDisplay) {
                 const yearNow = calculateCurrentEthiopianYear();
                 currentEthYearDisplay.innerText = formatNumber(yearNow);
+            }
+            // Update current Ethiopian full date display with new numeral system
+            if (currentEthFullDateDisplay) {
+                const d = getCurrentEthiopianDate();
+                const ethMonthName = mapMonthToAmharic(d.month);
+                const ethDay = formatNumber(d.day);
+                const ethYear = formatNumber(d.year);
+                const gregForEth = ethiopianToGregorianDate(d.year, d.month, d.day);
+                const weekdayEn = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][gregForEth.getDay()];
+                const weekdayAm = mapWeekDaysToAmharic(weekdayEn);
+                currentEthFullDateDisplay.innerText = `${ethMonthName} ${ethDay} ${ethYear} (${weekdayAm})`;
             }
             // Re-run calculations so all results switch numerals
             calculateCalendar();
